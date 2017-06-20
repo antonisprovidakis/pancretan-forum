@@ -1,0 +1,31 @@
+<div class="ui container">
+  <h1 id="title" class="ui center aligned header">{{producerBrandName}}</h1>
+  <div class="ui grid">
+    <div class="ui three doubling stackable cards">
+      <div class="ui raised card">
+        <div class="image">
+          <img src="assets/images/anthotyro.jpg">
+        </div>
+        <div class="content">
+          <div class="header">Matt Giampietro</div>
+          <div class="meta">
+            <a>Friends</a>
+          </div>
+          <div class="description">
+            Matthew is an interior designer living in New York.
+          </div>
+        </div>
+        <div class="extra content">
+          <a>
+            <!--<i class="user icon"></i>-->
+            Ask a Question
+          </a>
+          <span class="right floated like">
+            <i class="large like icon" [class.red]="liked"></i>
+            {{likesCount}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,10 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LoginComponent implements OnInit {
 
-  public title: String = 'Pan-Cretan Forum';
+  title = 'Pan-Cretan Forum';
 
-  // 34 and 140 are gonna be dynamic from firebase
-  public subTitle: String = '34 Hoteliers and 140 Producers of Crete gathered to make business';
+  // dynamic values from firebase
+  numOfHoteliers = 34;
+  numOfProducers = 140;
 
   constructor() { }
 

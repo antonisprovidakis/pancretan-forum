@@ -5,12 +5,20 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
+import { ExhibitionTableComponent } from './exhibition-table/exhibition-table.component';
+import { ExhibitionProductComponent } from './exhibition-product/exhibition-product.component';
+import { PeopleComponent } from './people/people.component';
+import { NegotiationsTableComponent } from './negotiations-table/negotiations-table.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegistrationComponent
+    RegistrationComponent,
+    ExhibitionTableComponent,
+    ExhibitionProductComponent,
+    PeopleComponent,
+    NegotiationsTableComponent
   ],
   imports: [
     BrowserModule,
