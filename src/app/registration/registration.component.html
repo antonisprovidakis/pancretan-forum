@@ -47,12 +47,11 @@
         <div class="inline fields">
           <label *ngIf="selectedRole == 'Hotelier'">Interests:</label>
           <label *ngIf="selectedRole == 'Producer'">Produces:</label>
+
           <div class="ui multiple selection dropdown fluid">
-            <!-- This will receive comma separated value like OH,TX,WY !-->
             <input name="interests" type="hidden">
             <i class="dropdown icon"></i>
-            <div *ngIf="selectedRole == 'Hotelier'" class="default text">Select Interests</div>
-            <div *ngIf="selectedRole == 'Producer'" class="default text">Select Products</div>
+            <div class="default text">Select Interests</div>
             <div class="menu">
               <div class="item" data-value="potato">Potato</div>
               <div class="item" data-value="tomato">Tomato</div>
