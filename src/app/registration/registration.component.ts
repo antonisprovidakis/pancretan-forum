@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterContentInit } from '@angular/core';
+
+import { RegistrationDetails } from './model/RegistrationDetails';
 
 declare var $: any;
 
@@ -8,21 +10,34 @@ declare var $: any;
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, AfterContentInit {
 
-  name: String = 'Antonis Providakis';
-  email: String = 'ant.providakis@gmail.com';
+  interests: Array<string> = [
+    'potato',
+    'tomato',
+    'beaf',
+    'pork',
+    'cheese'
+  ];
 
-  selectedRole: any = 'Hotelier'; // or Producer
+  model: RegistrationDetails = {};
 
   constructor() { }
 
   ngOnInit() {
+    this.model.role = 'Hotelier';
+    this.model.name = 'Antonis Providakis';
+    this.model.email = 'ant.providakis@gmail.com';
+
+  }
+
+  ngAfterContentInit() {
     this.setupUI();
+
   }
 
   selectRole(role) {
-    this.selectedRole = role;
+    console.log(this.model.role);
   }
 
   private setupUI() {
