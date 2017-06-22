@@ -1,3 +1,23 @@
-<p>
-  header works!
-</p>
+<div class="ui menu">
+  <div class="header item">
+    Pan-Cretan Forum
+  </div>
+  <a class="item" [routerLink]="['/']">
+    Home
+  </a>
+  <a class="item" *ngIf="role=='chamber'"  [routerLink]="['/forum']">
+    Forum Status
+  </a>
+  <a class="item" [routerLink]="['/schedule']">
+    Schedule
+  </a>
+  <a class="item" [routerLink]="['/people']">
+    People
+  </a>
+  <a class="item" [routerLink]="['/contact']">
+    Contact
+  </a>
+    <a class="ui secondary item right">
+      Logout
+    </a>
+</div>
