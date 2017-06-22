@@ -9,6 +9,7 @@ export class ExhibitionTableComponent implements OnInit {
 
   producerBrandName = 'Garganourakis Farm';
 
+
   constructor() { }
 
   ngOnInit() {
