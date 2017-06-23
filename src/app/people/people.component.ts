@@ -9,6 +9,7 @@ declare var $: any;
 })
 export class PeopleComponent implements OnInit {
 
+  selectedRole = 'Hotelier';
 
   peopleData = [
     {
@@ -24,13 +25,6 @@ export class PeopleComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.setupUI();
-  }
-
-  private setupUI() {
-    $('.ui.dropdown').dropdown();
-    // $('.ui.rating').rating();
-
   }
 
 }

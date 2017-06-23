@@ -1,25 +1,16 @@
 <div class="ui container">
   <h1 id="title" class="ui center aligned header">People</h1>
 
-  <div class="inline fields">
-    <label>Show:</label>
-    <div class="ui fluid selection dropdown">
-      <input type="hidden" name="hotel">
-      <i class="dropdown icon"></i>
-      <div class="default text">Select Role</div>
-      <div class="menu">
-        <div class="item" data-value="0">Hoteliers</div>
-        <div class="item" data-value="1">Producers</div>
-      </div>
-    </div>
-  </div>
+  <sui-select [(ngModel)]="selectedRole" placeholder="Users" class="fluid">
+    <sui-select-option value="Hoteliers"></sui-select-option>
+    <sui-select-option value="Producers"></sui-select-option>
+  </sui-select>
   <div class="ui relaxed divided list">
     <div class="item" *ngFor="let entry of peopleData">
       <i class="large github middle aligned icon"></i>
       <div class="content">
         <a class="header">{{entry.brandName}}</a>
-        <div class="description">Updated 10 mins ago</div>
-        <div class="ui star rating" [attr.data-rating]="entry.stars" data-max-rating="5"></div>
+        <sui-rating class="star" [ngModel]="entry.stars" [maximum]="5" isReadonly="true"></sui-rating>
       </div>
     </div>
   </div>
