@@ -6,60 +6,40 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" name="name" [(ngModel)]="model.name" placeholder="Name">
+            <input type="text" name="name" [(ngModel)]="model.name" placeholder="Name" readonly>
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
             <i class="mail icon"></i>
-            <input type="text" name="mail" [(ngModel)]="model.email" placeholder="E-mail">
+            <input type="text" name="mail" [(ngModel)]="model.email" placeholder="E-mail" readonly>
           </div>
         </div>
         <div class="inline fields">
           <label for="role">Role:</label>
           <div class="field">
-            <div class="ui radio checkbox">
-              <input id="MyDiv1" type="radio" name="role" [(ngModel)]="model.role" checked tabindex="0" class="hidden" value="Hotelier">
-              <label>Hotelier</label>
-            </div>
+            <sui-radio-button name="role" value="Hotelier" [(ngModel)]="model.role">Hotelier</sui-radio-button>
           </div>
           <div class="field">
-            <div class="ui radio checkbox">
-              <input id="MyDiv2" type="radio" name="role" [(ngModel)]="model.role" tabindex="0" class="hidden" value="Producer">
-              <label>Producer</label>
-            </div>
+            <sui-radio-button name="role" value="Producer" [(ngModel)]="model.role">Producer</sui-radio-button>
           </div>
         </div>
-
-        <div *ngIf="model.role == 'Hotelier'">
-          <div class="field">
-            <div class="ui input">
-              <input type="text" name="commpany" [(ngModel)]="model.company" placeholder="Hotel">
-            </div>
+        <div class="field" *ngIf="model.role == 'Hotelier'">
+          <div class="ui left icon input">
+            <i class="hotel icon"></i>
+            <input type="text" name="company" [(ngModel)]="model.company" placeholder="Hotel Name">
           </div>
         </div>
-        <div *ngIf="model.role == 'Producer'">
-          <div class="field">
-            <div class="ui input">
-              <input type="text" name="commpany" [(ngModel)]="model.company" placeholder="Company Name">
-            </div>
+        <div class="field" *ngIf="model.role == 'Producer'">
+          <div class="ui left icon input">
+            <i class="building icon"></i>
+            <input type="text" name="company" [(ngModel)]="model.company" placeholder="Company Name">
           </div>
         </div>
-
-        <div class="inline fields">
-          <label *ngIf="selectedRole == 'Hotelier'">Interests:</label>
-          <label *ngIf="selectedRole == 'Producer'">Produces:</label>
-
-          <div class="ui multiple selection dropdown fluid">
-            <input name="interests" [(ngModel)]="model.interests" type="hidden">
-            <i class="dropdown icon"></i>
-            <div class="default text">Select Interests</div>
-            <div class="menu">
-              <div *ngFor="let interest of interests">
-                <div class="item" data-value="interest">{{interest}}</div>
-              </div>
-            </div>
-          </div>
+        <div class="field">
+          <sui-multi-select class="fluid" name="interests" [(ngModel)]="model.interests" [options]="interests" #multiSelect>
+            <sui-select-option *ngFor="let option of multiSelect.availableOptions" [value]="option"></sui-select-option>
+          </sui-multi-select>
         </div>
         <button id="enterForumButton" class="ui primary button fluid" type="button">Enter Forum</button>
       </form>
