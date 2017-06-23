@@ -2,7 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-import {SuiModule} from 'ng2-semantic-ui';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { environment } from '../environments/environment';
+
+
+import { SuiModule } from 'ng2-semantic-ui';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -22,6 +28,15 @@ import { ExhibitionTableCardsComponent } from './home/exhibition-table-cards/exh
 import { ExhibitionTableCardComponent } from './home/exhibition-table-cards/exhibition-table-card/exhibition-table-card.component';
 import { ExhibitionProductComponent } from './home/exhibition-table-cards/exhibition-product/exhibition-product.component';
 import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibition-table/exhibition-table.component';
+
+// export const firebaseConfig = {
+//   apiKey: 'AIzaSyAVOLCcOnaPRDa2_QgRKDqdrk9wuCzWS7c',
+//   authDomain: 'pancretan-forum.firebaseapp.com',
+//   databaseURL: 'https://pancretan-forum.firebaseio.com',
+//   projectId: 'pancretan-forum',
+//   storageBucket: 'pancretan-forum.appspot.com',
+//   messagingSenderId: '867139335721'
+// }
 
 @NgModule({
   declarations: [
@@ -46,7 +61,11 @@ import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibiti
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    SuiModule
+    SuiModule,
+
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireDatabaseModule,
+    AngularFireAuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]
