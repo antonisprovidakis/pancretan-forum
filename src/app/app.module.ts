@@ -28,6 +28,9 @@ import { ExhibitionTableCardsComponent } from './home/exhibition-table-cards/exh
 import { ExhibitionTableCardComponent } from './home/exhibition-table-cards/exhibition-table-card/exhibition-table-card.component';
 import { ExhibitionProductComponent } from './home/exhibition-table-cards/exhibition-product/exhibition-product.component';
 import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibition-table/exhibition-table.component';
+import { LoggedComponent } from './logged/logged.component';
+
+import { AuthenticationService } from './shared/authentication.service';
 
 // export const firebaseConfig = {
 //   apiKey: 'AIzaSyAVOLCcOnaPRDa2_QgRKDqdrk9wuCzWS7c',
@@ -55,7 +58,8 @@ import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibiti
     ExhibitionTableCardsComponent,
     ExhibitionTableCardComponent,
     ExhibitionProductComponent,
-    ExhibitionTableComponent
+    ExhibitionTableComponent,
+    LoggedComponent
   ],
   imports: [
     BrowserModule,
@@ -67,7 +71,7 @@ import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibiti
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  providers: [],
+  providers: [AuthenticationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,11 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 
-// import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 import { Router } from '@angular/router';
+
+import 'rxjs/add/operator/take';
+
+import { AuthenticationService } from '../shared/authentication.service';
+
 
 @Component({
   selector: 'app-login',
@@ -20,27 +25,16 @@ export class LoginComponent implements OnInit {
   numOfHoteliers = 34;
   numOfProducers = 140;
 
-  user: Observable<firebase.User>;
-
-  constructor(public afAuth: AngularFireAuth, private router: Router) {
-    this.user = afAuth.authState;
-  }
+  // constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { }
+  constructor(public authService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
   }
 
   loginGoogle() {
-    // TODO: firebase auth
-    this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
-      (data) => {
-        console.log(data);
-        console.log('----');
-
-        // TODO: add user to database or
-        // add user observable to a service in order to save data ONCE in registration screen
-        this.user.subscribe((userData) => console.log(userData))
-      }
-    );
+    this.authService.loginWithGoogle();
+    this.authService.isRegistered().subscribe(isRegistered => {
+      console.log(isRegistered);
+    })
   }
-
 }
