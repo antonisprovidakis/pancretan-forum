@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
 
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -7,67 +9,79 @@ import * as firebase from 'firebase/app';
 
 import 'rxjs/add/operator/take';
 
-interface IUser {
-  name: string;
-  email: string;
-  photoURL: string;
-  role?: string;
-}
+// interface IUser {
+//   name: string;
+//   email: string;
+//   photoURL: string;
+//   role?: string;
+// }
 
 @Injectable()
 export class AuthenticationService {
 
-  // currentUser: Observable<firebase.User> = null;
-  userInfo: Observable<IUser>;
-
-  loggedUser: IUser;
+  private user: firebase.User = null;
 
   constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) {
-    // this.currentUser = afAuth.authState;
   }
 
+  get roleObservable(): Observable<string> {
+    return new Observable(observer => {
+      if (this.authenticated) {
+        this.db.object('/users/' + this.currentUserId + '/role').take(1).subscribe(
+          (roleData) => {
+            const role = roleData.$value;
 
-  // public setUserInfo(userInfo: User) {
-  //   this.userInfo = userInfo;
-  // }
-
-  // public getCurrentUser() {
-  //   return this.currentUser;
-  // }
-
-  isRegistered(): Observable<boolean> {
-    const observable = new Observable(observer => {
-      this.userInfo.subscribe((user: IUser) => {
-        observer.next(!!user.role);
+            if (role) {
+              observer.next(role);
+            } else {
+              observer.next(null);
+            }
+            observer.complete();
+          }
+        );
+      } else {
+        observer.next(null);
         observer.complete();
-      });
+      }
     });
+  }
 
-    return observable;
+  get authenticated(): boolean {
+    return this.user !== null;
+  }
+
+  get currentUser(): firebase.User {
+    return this.authenticated ? this.user : null;
+  }
+
+  get currentUserObservable(): Observable<firebase.User> {
+    return this.afAuth.authState;
+  }
+
+  get currentUserId(): string {
+    return this.authenticated ? this.user.uid : '';
+  }
+
+  get currentUserAnonymous(): boolean {
+    return this.authenticated ? this.user.isAnonymous : false
+  }
+
+  get currentUserDisplayName(): string {
+    if (!this.user) {
+      return 'Guest'
+    } else if (this.currentUserAnonymous) {
+      return 'Anonymous'
+    } else {
+      return this.user.displayName || 'User without a Name'
+    }
   }
 
   loginWithGoogle() {
-    this.userInfo = new Observable(observer => {
-      this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
-        () => {
-          this.afAuth.authState.subscribe((authData) => {
-            // console.log(authData);
-            this.db.object('/users/' + authData.uid).take(1).subscribe(
-              userData => {
-                // this.loggedUser = new User(userData.name, userData.email, userData.photoURL, userData.role);
-
-                this.loggedUser = {
-                  name: userData.name,
-                  email: userData.email,
-                  photoURL: userData.photoURL,
-                  role: userData.role
-                }
-                observer.next(this.loggedUser);
-                observer.complete();
-              });
-          });
-        })
-    });
+    return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
+      (authData) => {
+        this.user = authData.user;
+      }
+    );
   }
 
   logout() {

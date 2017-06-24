@@ -31,15 +31,7 @@ import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibiti
 import { LoggedComponent } from './logged/logged.component';
 
 import { AuthenticationService } from './shared/authentication.service';
-
-// export const firebaseConfig = {
-//   apiKey: 'AIzaSyAVOLCcOnaPRDa2_QgRKDqdrk9wuCzWS7c',
-//   authDomain: 'pancretan-forum.firebaseapp.com',
-//   databaseURL: 'https://pancretan-forum.firebaseio.com',
-//   projectId: 'pancretan-forum',
-//   storageBucket: 'pancretan-forum.appspot.com',
-//   messagingSenderId: '867139335721'
-// }
+import { AppGuard } from './app.guard';
 
 @NgModule({
   declarations: [
@@ -71,7 +63,7 @@ import { AuthenticationService } from './shared/authentication.service';
     AngularFireDatabaseModule,
     AngularFireAuthModule
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, AppGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

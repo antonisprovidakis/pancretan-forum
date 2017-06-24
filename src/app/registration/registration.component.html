@@ -18,19 +18,19 @@
         <div class="inline fields">
           <label for="role">Role:</label>
           <div class="field">
-            <sui-radio-button name="role" value="Hotelier" [(ngModel)]="model.role">Hotelier</sui-radio-button>
+            <sui-radio-button name="role" value="hotelier" [(ngModel)]="model.role">Hotelier</sui-radio-button>
           </div>
           <div class="field">
-            <sui-radio-button name="role" value="Producer" [(ngModel)]="model.role">Producer</sui-radio-button>
+            <sui-radio-button name="role" value="producer" [(ngModel)]="model.role">Producer</sui-radio-button>
           </div>
         </div>
-        <div class="field" *ngIf="model.role == 'Hotelier'">
+        <div class="field" *ngIf="model.role == 'hotelier'">
           <div class="ui left icon input">
             <i class="hotel icon"></i>
             <input type="text" name="company" [(ngModel)]="model.company" placeholder="Hotel Name">
           </div>
         </div>
-        <div class="field" *ngIf="model.role == 'Producer'">
+        <div class="field" *ngIf="model.role == 'producer'">
           <div class="ui left icon input">
             <i class="building icon"></i>
             <input type="text" name="company" [(ngModel)]="model.company" placeholder="Company Name">

@@ -2,22 +2,24 @@
   <div class="header item">
     Pan-Cretan Forum
   </div>
-  <a class="item" [routerLink]="['/']">
-    Home
+  <a class="item" [routerLink]="['/']" routerLinkActive="active">
+    Forum
   </a>
   <a class="item" *ngIf="role=='chamber'"  [routerLink]="['/forum']">
     Forum Status
   </a>
-  <a class="item" [routerLink]="['/schedule']">
+  <a class="item" [routerLink]="['/schedule']" routerLinkActive="active">
+  <!--<a class="item" [routerLink]="['/login']" routerLinkActive="active">-->
     Schedule
   </a>
-  <a class="item" [routerLink]="['/people']">
+  <a class="item" [routerLink]="['/people']" routerLinkActive="active">
+  <!--<a class="item" [routerLink]="['/register']" routerLinkActive="active">-->
     People
   </a>
-  <a class="item" [routerLink]="['/contact']">
+  <a class="item" [routerLink]="['/contact']" routerLinkActive="active">
     Contact
   </a>
-    <a class="ui secondary item right">
-      Logout
-    </a>
+  <a class="ui secondary item right" (click)="logout()">
+    Logout
+  </a>
 </div>

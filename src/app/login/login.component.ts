@@ -26,15 +26,27 @@ export class LoginComponent implements OnInit {
   numOfProducers = 140;
 
   // constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { }
-  constructor(public authService: AuthenticationService, private router: Router) { }
+  constructor(public authService: AuthenticationService, private router: Router) {
+    // this.authService.rr2.subscribe((r) => {
+    //   console.log(r);
+    // });
+  }
 
   ngOnInit() {
   }
 
   loginGoogle() {
-    this.authService.loginWithGoogle();
-    this.authService.isRegistered().subscribe(isRegistered => {
-      console.log(isRegistered);
-    })
+    this.authService.loginWithGoogle().then(() => {
+      this.authService.roleObservable.take(1).subscribe(role => {
+        if (role) {
+          this.router.navigate(['/home']);
+        } else {
+          this.router.navigate(['/register']);
+        }
+      });
+    });
+  }
+
+  test() {
   }
 }
