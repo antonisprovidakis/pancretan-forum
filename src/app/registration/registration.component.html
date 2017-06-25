@@ -6,13 +6,15 @@
         <div class="field">
           <div class="ui left icon input">
             <i class="user icon"></i>
-            <input type="text" name="name" [(ngModel)]="model.name" placeholder="Name" readonly>
+            <!--<input type="text" name="name" placeholder="Name" readonly value="{{this.authService.currentUser.displayName}}">-->
+            <input type="text" name="name" placeholder="Name" [(ngModel)]="model.name" readonly >
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
             <i class="mail icon"></i>
-            <input type="text" name="mail" [(ngModel)]="model.email" placeholder="E-mail" readonly>
+            <!--<input type="text" name="mail" placeholder="E-mail" readonly value="{{this.authService.currentUser.email}}">-->
+            <input type="text" name="mail" placeholder="E-mail" [(ngModel)]="model.email" readonly>
           </div>
         </div>
         <div class="inline fields">
@@ -41,7 +43,7 @@
             <sui-select-option *ngFor="let option of multiSelect.availableOptions" [value]="option"></sui-select-option>
           </sui-multi-select>
         </div>
-        <button id="enterForumButton" class="ui primary button fluid" type="button">Enter Forum</button>
+        <button id="enterForumButton" class="ui primary button fluid" type="button" (click)="enterForum()">Enter Forum</button>
       </form>
     </div>
   </div>

@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+// import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
-import { Router } from '@angular/router';
-
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/take';
 
 import { AuthenticationService } from '../shared/authentication.service';
@@ -25,11 +24,7 @@ export class LoginComponent implements OnInit {
   numOfHoteliers = 34;
   numOfProducers = 140;
 
-  // constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase, private router: Router) { }
   constructor(public authService: AuthenticationService, private router: Router) {
-    // this.authService.rr2.subscribe((r) => {
-    //   console.log(r);
-    // });
   }
 
   ngOnInit() {
