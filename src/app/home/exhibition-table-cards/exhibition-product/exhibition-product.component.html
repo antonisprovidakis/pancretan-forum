@@ -1,24 +1,25 @@
 <div class="ui raised card">
   <div class="image">
-    <img src="https://semantic-ui.com/images/avatar2/large/matthew.png">
+    <!--<img src="https://semantic-ui.com/images/avatar2/large/matthew.png">-->
+    <img src="assets/images/{{image}}">
   </div>
   <div class="content">
-    <div class="header">Matt Giampietro</div>
-    <div class="meta">
-      <a>Friends</a>
-    </div>
+    <div class="header">{{title}}</div>
     <div class="description">
-      Matthew is an interior designer living in New York.
+      {{descr}}
     </div>
   </div>
   <div class="extra content">
-    <span class="right floated like">
-      <i class="like icon" [class.red]="liked"></i>
-      {{likesCount}}
+    <span class="right floated like" (click)="like(!liked)">
+      <i class="like large icon" [class.red]="liked"></i>
+        {{likesCount}}
     </span>
-    <span>
-      <i class="user icon"></i>
-      75 Friends
-    </span>
+    <a>
+      <!--<i class="user icon"></i>-->
+      ASK A QUESTION
+    </a>
+    <!--<a>
+      COMMENTS
+    </a>-->
   </div>
 </div>
