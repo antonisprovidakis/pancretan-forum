@@ -19,7 +19,7 @@
   <a class="item" [routerLink]="['/contact']" routerLinkActive="active">
     Contact
   </a>
-  <a class="ui secondary item right" (click)="logout()">
+  <a class="ui secondary item right" (click)="logout()" *ngIf="authService.isAuthenticated()">
     Logout
   </a>
 </div>

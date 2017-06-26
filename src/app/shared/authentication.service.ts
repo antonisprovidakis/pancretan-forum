@@ -19,18 +19,42 @@ import 'rxjs/add/operator/take';
 @Injectable()
 export class AuthenticationService {
 
-  private user: firebase.User = null;
+  private user: Observable<firebase.User>;
+
+  private authenticated = true;
+  private displayName: string = null;
+  private email: string = null;
+  private uid: string = null
+  // private role: string = null;
 
   constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+    this.user = afAuth.authState;
+    this.user.subscribe((authData) => {
+      if (authData) {
+        this.authenticated = true;
+        this.displayName = authData.displayName;
+        this.email = authData.email;
+        this.uid = authData.uid;
+        // this.role = null;
+        console.log('from service - login');
+      } else {
+        this.authenticated = false;
+        this.displayName = null;
+        this.email = null;
+        this.uid = null;
+        // this.role = null;
+        console.log('from service - logout');
+      }
+    });
   }
+
 
   get roleObservable(): Observable<string> {
     return new Observable(observer => {
       if (this.authenticated) {
-        this.db.object('/users/' + this.currentUserId + '/role').take(1).subscribe(
+        this.db.object('/users/' + this.uid + '/role').take(1).subscribe(
           (roleData) => {
             const role = roleData.$value;
-
             if (role) {
               observer.next(role);
             } else {
@@ -46,42 +70,29 @@ export class AuthenticationService {
     });
   }
 
-  get authenticated(): boolean {
-    return this.user !== null;
+  isAuthenticated(): boolean {
+    return this.authenticated;
   }
 
-  get currentUser(): firebase.User {
+  getCurrentUser(): Observable<firebase.User> {
     return this.authenticated ? this.user : null;
   }
 
-  get currentUserObservable(): Observable<firebase.User> {
-    return this.afAuth.authState;
+  getUID(): string {
+    return this.authenticated ? this.uid : '';
   }
 
-  get currentUserId(): string {
-    return this.authenticated ? this.user.uid : '';
+  getEmail(): string {
+    return this.authenticated ? this.email : '';
   }
 
-  get currentUserAnonymous(): boolean {
-    return this.authenticated ? this.user.isAnonymous : false
+  getDisplayName(): string {
+    return this.authenticated ? this.displayName : '';
   }
 
-  get currentUserDisplayName(): string {
-    if (!this.user) {
-      return 'Guest'
-    } else if (this.currentUserAnonymous) {
-      return 'Anonymous'
-    } else {
-      return this.user.displayName || 'User without a Name'
-    }
-  }
 
   loginWithGoogle() {
-    return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then(
-      (authData) => {
-        this.user = authData.user;
-      }
-    );
+    return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
   logout() {

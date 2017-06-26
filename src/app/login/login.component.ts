@@ -31,8 +31,12 @@ export class LoginComponent implements OnInit {
   }
 
   loginGoogle() {
-    this.authService.loginWithGoogle().then(() => {
+    this.authService.loginWithGoogle().then((d) => {
+      console.log('in loginGoogle - LoginComponent: ', d);
+
       this.authService.roleObservable.take(1).subscribe(role => {
+        console.log('from login - roleObs');
+
         if (role) {
           this.router.navigate(['/home']);
         } else {
@@ -43,5 +47,6 @@ export class LoginComponent implements OnInit {
   }
 
   test() {
+
   }
 }
