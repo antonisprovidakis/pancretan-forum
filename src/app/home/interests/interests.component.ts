@@ -6,7 +6,7 @@ import { InterestObject } from './interest-object.interface';
 @Component({
   selector: 'app-interests',
   templateUrl: './interests.component.html',
-  styleUrls: ['./interests.component.css']
+  styleUrls: ['./interests.component.scss']
 })
 export class InterestsComponent implements OnInit {
 

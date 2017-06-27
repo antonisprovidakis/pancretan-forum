@@ -7,8 +7,29 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { SuiModule } from 'ng2-semantic-ui';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+
+import {
+  MdButtonModule,
+  MdCheckboxModule,
+  MdRadioModule,
+  MdSelectModule,
+  MdSlideToggleModule,
+  MdCardModule,
+  MdToolbarModule,
+  MdChipsModule,
+  MdDialogModule,
+  MdIconModule,
+  MdInputModule,
+  MdSliderModule,
+  MdListModule,
+  MdProgressSpinnerModule
+} from '@angular/material';
+
+import 'hammerjs';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -57,11 +78,25 @@ import { AppGuard } from './app.guard';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    SuiModule,
-
+    BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireDatabaseModule,
-    AngularFireAuthModule
+    AngularFireAuthModule,
+    FlexLayoutModule,
+    MdButtonModule,
+    MdCheckboxModule,
+    MdRadioModule,
+    MdSelectModule,
+    MdSlideToggleModule,
+    MdCardModule,
+    MdToolbarModule,
+    MdChipsModule,
+    MdDialogModule,
+    MdIconModule,
+    MdInputModule,
+    MdSliderModule,
+    MdListModule,
+    MdProgressSpinnerModule
   ],
   providers: [AuthenticationService, AppGuard],
   bootstrap: [AppComponent]
