@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 import { Observable } from 'rxjs/Observable';
@@ -24,19 +24,16 @@ export class LoginComponent implements OnInit {
   numOfHoteliers = 0;
   numOfProducers = 0;
 
-  constructor(public authService: AuthenticationService, db: AngularFireDatabase, private router: Router) {
+  constructor(public authService: AuthenticationService, private db: AngularFireDatabase, private router: Router) {
 
     this.authService.getCurrentUser().subscribe((authData) => {
       if (authData) {
         this.authService.roleObservable.take(1).subscribe(role => {
-          console.log('from login - roleObs: ', role);
 
           if (role) {
             this.router.navigate(['/home']);
-            console.log('navigate to home');
           } else {
             this.router.navigate(['/register']);
-            console.log('navigate to register');
           }
         });
       }

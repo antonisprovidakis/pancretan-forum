@@ -6,16 +6,20 @@
       <span>{{ numOfProducers }}</span> Producers of Crete gathered to make business
     </div>
   </div>
-  <md-card id="formContainer">
-    <form fxLayout="column">
-      <md-input-container>
-        <input mdInput placeholder="Email" />
-      </md-input-container>
-      <md-input-container>
-        <input mdInput placeholder="Password" />
-      </md-input-container>
-      <button md-raised-button color="accent" (click)="test()">Log In</button>
-    </form>
+  <md-card>
+    <md-card-content id="formContainer">
+      <form fxLayout="column">
+        <md-input-container>
+          <input mdInput placeholder="Email" />
+        </md-input-container>
+        <md-input-container>
+          <input mdInput placeholder="Password" />
+        </md-input-container>
+      </form>
+    </md-card-content>
+    <md-card-actions>
+      <button md-raised-button fxFlex color="accent" (click)="test()">LOG IN</button>
+    </md-card-actions>
   </md-card>
   <span id="orContainer">or</span>
   <button id="googleLogInButton" md-raised-button (click)="loginGoogle()">Login with Google</button>
