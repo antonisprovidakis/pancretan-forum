@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p>
   registration works
 </p>
@@ -11,42 +12,52 @@
           <div class="ui left icon input">
             <i class="user icon"></i>
             <input type="text" name="name" placeholder="Name" value="{{this.authService.getDisplayName()}}" readonly >
+=======
+<div fxLayout="row" fxLayoutAlign="center center" style="min-height: 600px">
+  <div fxFlex="40%" fxFlexAlign="center">
+    <form [formGroup]="registrationForm">
+      <md-card>
+        <md-card-header>
+          <h2>Regitration Form</h2>
+        </md-card-header>
+        <md-card-content class="reg-form-content">
+          <div fxLayout="column" fxLayoutAlign="space-between none">
+            <div>
+              <md-input-container class="example-full-width">
+                <input mdInput placeholder="Name" formControlName="name">
+              </md-input-container>
+            </div>
+            <div>
+              <md-input-container class="example-full-width">
+                <input mdInput placeholder="E-mail" formControlName="email">
+              </md-input-container>
+            </div>
+            <div>
+              <md-radio-group formControlName="role" class="reg-from-padding-top">
+                <label for=""> Type: </label>
+                <md-radio-button value="hotelier">Hotelier</md-radio-button>
+                <md-radio-button value="producer">Producer</md-radio-button>
+              </md-radio-group>
+            </div>
+            <div>
+              <md-input-container class="example-full-width reg-from-padding-top">
+                <input mdInput placeholder="Company" formControlName="company" value=''>
+              </md-input-container>
+            </div>
+            <div>
+              <md-select placeholder="Interests" name="interests" class="example-full-width reg-from-padding-top" multiple formControlName="interests">
+                <md-option *ngFor="let interest of allInterests" [value]="interest">
+                  {{interest}}
+                </md-option>
+              </md-select>
+            </div>
+            <div class="reg-from-padding-top">
+              <button md-raised-button color="primary" type="button" class="example-full-width" (click)="enterForum()">Enter forum</button>
+            </div>
+>>>>>>> ed18d062b7215a27895cefb977d40af5517907a8
           </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="mail icon"></i>
-            <input type="text" name="mail" placeholder="E-mail" value="{{this.authService.getEmail()}}" readonly>
-          </div>
-        </div>
-        <div class="inline fields">
-          <label for="role">Role:</label>
-          <div class="field">
-            <sui-radio-button name="role" value="hotelier" [(ngModel)]="model.role">Hotelier</sui-radio-button>
-          </div>
-          <div class="field">
-            <sui-radio-button name="role" value="producer" [(ngModel)]="model.role">Producer</sui-radio-button>
-          </div>
-        </div>
-        <div class="field" *ngIf="model.role == 'hotelier'">
-          <div class="ui left icon input">
-            <i class="hotel icon"></i>
-            <input type="text" name="company" [(ngModel)]="model.company" placeholder="Hotel Name">
-          </div>
-        </div>
-        <div class="field" *ngIf="model.role == 'producer'">
-          <div class="ui left icon input">
-            <i class="building icon"></i>
-            <input type="text" name="company" [(ngModel)]="model.company" placeholder="Company Name">
-          </div>
-        </div>
-        <div class="field">
-          <sui-multi-select class="fluid" name="interests" [(ngModel)]="model.interests" [options]="allInterests" #multiSelect>
-            <sui-select-option *ngFor="let option of multiSelect.availableOptions" [value]="option"></sui-select-option>
-          </sui-multi-select>
-        </div>
-        <button id="enterForumButton" class="ui primary button fluid" type="button" (click)="enterForum()">Enter Forum</button>
-      </form>
-    </div>
+        </md-card-content>
+      </md-card>
+    </form>
   </div>
-</div>-->
+</div>

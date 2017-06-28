@@ -1,8 +1,25 @@
-// .grid{
-//   height: 100%;
-// }
+.content {
+  width: 430px;
+  height: 470px;
+  position: absolute;
+  /*it can be fixed too*/
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  /*this to solve "the content will not be cut when the window is smaller than the content": */
+  max-width: 100%;
+  max-height: 100%;
+  overflow: auto;
+}
 
-// .column{
-//   max-width: 600px;
-// }
-
+.reg-form-content{
+padding-left: 20px;
+}
+.reg-from-padding-top{
+  padding-top: 15px;
+}
+.example-full-width {
+  width: 90%;
+}
