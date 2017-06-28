@@ -115,7 +115,7 @@ export class RegistrationComponent implements OnInit {
     const prod_name = data.company;
     const interests = data.interests;
 
-    this.db.object('/hoteliers/users/' + this.authService.getUID()).set({
+    this.db.object('/producers/users/' + this.authService.getUID()).set({
       prod_name: prod_name,
       interests: interests
     });
