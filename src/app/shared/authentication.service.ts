@@ -21,7 +21,7 @@ export class AuthenticationService {
 
   private user: Observable<firebase.User>;
 
-  private authenticated = false;
+  private authenticated = true;
   private displayName: string = null;
   private email: string = null;
   private uid: string = null
@@ -29,7 +29,6 @@ export class AuthenticationService {
 
   constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) {
     this.user = afAuth.authState;
-
     this.user.subscribe((authData) => {
       if (authData) {
         this.authenticated = true;
@@ -52,14 +51,9 @@ export class AuthenticationService {
 
   get roleObservable(): Observable<string> {
     return new Observable(observer => {
-      // console.log('TEST: ', this.authenticated);
-
-
       if (this.authenticated) {
         this.db.object('/users/' + this.uid + '/role').take(1).subscribe(
           (roleData) => {
-            // console.log('from roleObservable - roleData: ', roleData);
-
             const role = roleData.$value;
             if (role) {
               observer.next(role);
@@ -78,12 +72,10 @@ export class AuthenticationService {
 
   isAuthenticated(): boolean {
     return this.authenticated;
-    // return true;
   }
 
   getCurrentUser(): Observable<firebase.User> {
-    // return this.authenticated ? this.user : null;
-    return this.user;
+    return this.authenticated ? this.user : null;
   }
 
   getUID(): string {
