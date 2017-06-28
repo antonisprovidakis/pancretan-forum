@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit {
 
   role = 'hotelier';
 
-  constructor(private authService: AuthenticationService, private router: Router) { }
+  constructor(public authService: AuthenticationService, private router: Router) { }
 
   ngOnInit() {
   }

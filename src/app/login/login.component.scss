@@ -1,8 +1,19 @@
-// .grid{
-//   height: 100%;
-// }
+#header {
+  margin-bottom: 16px;
+  text-align: center;
+}
 
-// .column{
-//   max-width: 600px;
-// }
+md-card {
+  width: 100vw;
+  max-width: 500px;
+}
 
+#orContainer {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+#googleLogInButton {
+  color: white;
+  background-color: #dd4b39;
+}

@@ -4,16 +4,16 @@
       <!--<md-icon class="icon-20">chat</md-icon>-->
       PanCretan Forum
     </span>
-    <a md-button routerLink=".">HOME</a>
-    <a md-button routerLink="/forum" *ngIf="role=='chamber'">FORUM STATUS</a>
-    <a md-button routerLink="/schedule">SCHEDULE</a>
-    <a md-button routerLink="/people">PEOPLE</a>
-    <a md-button routerLink="/contact">CONTACT</a>
+    <a md-button routerLink="." *ngIf="authService.isAuthenticated()">HOME</a>
+    <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role=='chamber'">FORUM STATUS</a>
+    <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated()">SCHEDULE</a>
+    <a md-button routerLink="/people" *ngIf="authService.isAuthenticated()">PEOPLE</a>
+    <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated()">CONTACT</a>
   </div>
   <!--<button md-button (click)="logout()" *ngIf="authService.isAuthenticated()">-->
-  <button md-button (click)="logout()">
-    <md-icon>exit_to_app</md-icon>
+  <button md-button *ngIf="authService.isAuthenticated()" (click)="logout()">
     Logout
+    <md-icon class="md-24">exit_to_app</md-icon>
   </button>
 </md-toolbar>
 

@@ -1,33 +1,22 @@
-<!--<div class="ui middle aligned center aligned grid">
-  <div class="column">
-    <h1 id="title" class="ui center aligned header">{{title}}</h1>
-    <h3 id="subTitle" class="ui center aligned header">{{numOfHoteliers}} Hoteliers and {{numOfProducers}} Producers of Crete gathered to make business</h3>
-    <div class="ui raised segment">
-      <form class="ui form">
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="mail icon"></i>
-            <input type="text" name="email" placeholder="E-mail">
-          </div>
-        </div>
-        <div class="field">
-          <div class="ui left icon input">
-            <i class="lock icon"></i>
-            <input type="password" name="password" placeholder="Password">
-          </div>
-        </div>
-        <button id="normalLogInButton" class="ui primary button fluid" type="button" (click)="test()">Log in</button>
-      </form>
-    </div>
-
-    <div class="ui center aligned segment basic">or</div>
-
-    <div class="ui center aligned segment basic">
-      <button id="googleLogInButton" class="ui google plus button aligned center" (click)="loginGoogle()">
-        <i class="google icon"></i>
-        Log in with Google
-      </button>
+<div fxLayout="column" fxLayoutAlign="start center">
+  <div id="header" fxLayout="column" fxLayoutAlign="center center">
+    <h1>Pan-Cretan Forum</h1>
+    <div>
+      <span>{{ numOfHoteliers }}</span> Hoteliers and
+      <span>{{ numOfProducers }}</span> Producers of Crete gathered to make business
     </div>
   </div>
-</div>-->
-
+  <md-card id="formContainer">
+    <form fxLayout="column">
+      <md-input-container>
+        <input mdInput placeholder="Email" />
+      </md-input-container>
+      <md-input-container>
+        <input mdInput placeholder="Password" />
+      </md-input-container>
+      <button md-raised-button color="accent" (click)="test()">Log In</button>
+    </form>
+  </md-card>
+  <span id="orContainer">or</span>
+  <button id="googleLogInButton" md-raised-button (click)="loginGoogle()">Login with Google</button>
+</div>
