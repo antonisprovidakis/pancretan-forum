@@ -1,4 +1,5 @@
-import { Component, OnInit, AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import {FormGroup, FormControl, FormBuilder, Validator} from "@angular/forms";
 import { Router } from '@angular/router';
 
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
@@ -20,7 +21,7 @@ interface RegistrationDetails {
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit, AfterContentChecked, AfterContentInit, AfterViewChecked, AfterViewInit {
+export class RegistrationComponent implements OnInit {
 
 
   allInterests: string[] = [
@@ -30,41 +31,27 @@ export class RegistrationComponent implements OnInit, AfterContentChecked, After
     'pork',
     'cheese'
   ];
+  registrationForm: FormGroup;
 
-  public model: RegistrationDetails;
+  constructor(
+    private authService: AuthenticationService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) { }
 
-  constructor(private authService: AuthenticationService, private router: Router) {
-  // constructor(private router: Router) {
-    console.log('constructor');
-  }
-
-   ngAfterViewInit(): void {
-    console.log('ngAfterViewInit');
-  }
-  ngAfterViewChecked(): void {
-    console.log('ngAfterViewChecked');
-  }
-  ngAfterContentInit(): void {
-    console.log('ngAfterContentInit');
-  }
-  ngAfterContentChecked(): void {
-    console.log('ngAfterContentChecked');
-  }
 
   ngOnInit() {
-    console.log('ngOnInit');
-
-    this.model = {
-      // name: this.authService.getDisplayName(),
-      // email: this.authService.getEmail(),
-      role: 'hotelier',
-      company: '',
-      interests: [],
-    };
+    this.registrationForm = new FormGroup({
+      name: new FormControl({ value: 'Mamra', disabled: true }),
+      email: new FormControl({ value: '', disabled: true }),
+      company: new FormControl(),
+      role: new FormControl({ value: 'hotelier' }),
+      interests: new FormControl()
+    })
   }
 
   enterForum() {
-    console.log(this.model);
+    console.log('regitration form: ', this.registrationForm.value)
   }
 
 }
