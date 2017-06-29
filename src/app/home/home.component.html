@@ -1,4 +1,9 @@
 <p>
   home works!
 </p>
-<app-interests></app-interests>
+<div *ngIf="userInterests && allInterests">
+  <app-interests [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
+</div>
+<div *ngFor="let userInterest of userInterests">
+  <label>{{userInterest}}</label>
+</div>

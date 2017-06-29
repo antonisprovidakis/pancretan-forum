@@ -1,12 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/take';
-
-import { AuthenticationService } from '../../shared/authentication.service';
-
 import { InterestObject } from './interest-object.interface';
 
 
@@ -19,60 +12,87 @@ export class InterestsComponent implements OnInit {
 
   /* interests must contain all possible values, with user interests preselected */
   // default values
-  interests: Observable<InterestObject[]>;
+  @Input() interests: string[] = ['potato', 'tomato'];
+  @Output() interestsChange = new EventEmitter<string[]>();
 
-  constructor(
-    private authService: AuthenticationService,
-    private db: AngularFireDatabase
-  ) { }
+  @Input() allInterests: string[] = ['potato', 'tomato', 'beaf', 'pork', 'cheese'];
+
+  viewInterests: any[] = [];
+  constructor() { }
 
   ngOnInit() {
-    //create the interests observable of InterestObject array
-    this.interests = new Observable(observer => {
-      //get all interests from the database
-      this.db.list('/interests').subscribe(dbInterests => {
-        const interestObjectArray = [];
-
-        //getCurrentUser uid
-        this.authService.getCurrentUser().subscribe(user => {
-
-          //get current user role
-          this.authService.roleObservable.subscribe(role => {
-            //get curent user interests
-            this.db.list('/' + role + 's/users/' + this.authService.getUID() + '/interests')
-              .subscribe(userInterests => {
-
-                for (let dbInterest of dbInterests) {
-
-                  interestObjectArray.push({
-                    name: dbInterest.$value,
-                    value: dbInterest.$value,
-                    checked: false
-                  });
-                }
-                // for (let userInterest of userInterests) {
-                // }
-
-                observer.next(interestObjectArray);
-                observer.complete();
-              });
-          });
-        });
+    this.viewInterests = [];
+    // return a sruct like this:
+    // [
+    //   { name: 'potato', value: 'potato', checked: true },
+    //   { name: 'tomato', value: 'tomato', checked: true },
+    //   { name: 'beaf', value: 'beaf', checked: false },
+    //   { name: 'pork', value: 'pork', checked: true },
+    //   { name: 'cheese', value: 'cheese', checked: true }
+    // ]
+    for (let interest of this.allInterests) {
+      this.viewInterests.push({
+        name: interest,
+        value: interest,
+        checked: false
       });
+    }
+
+    this.viewInterests.forEach(interest => {
+      for (let userInterest of this.interests) {
+        if (interest.name === userInterest) {
+          interest.checked = true;
+        }
+      }
     });
-
-    this.interests.subscribe(interests => console.log('final Interests', interests));
-
   }
 
-  // get selectedOptions() {
-  //   return this.interests.filter(opt => opt.checked)
-  //     .map(opt => opt.value)
-  // }
+  toggleInterestFromArray(event) {
+    this.updateViewInterests(event.source.value, event.checked);
+    const newInterests = this.viewInterests.filter(opt => opt.checked)
+      .map(opt => opt.value);
+    // TODO: implement
+    this.interestsChange.emit(newInterests);
+  }
 
-  test() {
-    // console.log(JSON.stringify(this.interests, null, 2));
-    // console.log(this.selectedOptions);
+  get selectedOptions() {
+    let viewInterests = [];
+    // return a sruct like this:
+    // [
+    //   { name: 'potato', value: 'potato', checked: true },
+    //   { name: 'tomato', value: 'tomato', checked: true },
+    //   { name: 'beaf', value: 'beaf', checked: false },
+    //   { name: 'pork', value: 'pork', checked: true },
+    //   { name: 'cheese', value: 'cheese', checked: true }
+    // ]
+    for (let interest of this.allInterests) {
+      viewInterests.push({
+        name: interest,
+        value: interest,
+        checked: false
+      });
+    }
+
+    viewInterests.forEach(interest => {
+      for (let userInterest of this.interests) {
+        if (interest.name === userInterest) {
+          interest.checked = true;
+        }
+      }
+    });
+
+    return viewInterests;
+  }
+
+  updateViewInterests(changedInterest, checked){
+
+    this.viewInterests.forEach(interest => {
+      if(interest.value === changedInterest){
+        interest.checked = checked;
+      }
+
+    })
+
   }
 
 
