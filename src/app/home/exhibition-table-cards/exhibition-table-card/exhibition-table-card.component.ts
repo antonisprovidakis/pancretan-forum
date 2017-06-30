@@ -6,9 +6,9 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./exhibition-table-card.component.scss']
 })
 export class ExhibitionTableCardComponent implements OnInit {
-  @Input() likesCount = 0;
+  @Input() popularity = 0;
   @Input() image = '/assets/images/garg-farm.png';
-  @Input() title = 'Garganourakis Farms';
+  @Input() producerName = 'Garganourakis Farms';
   @Input() descr = 'Our farms produce the best cheese on Crete';
 
   constructor() { }

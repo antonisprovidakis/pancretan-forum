@@ -10,10 +10,9 @@ import { ProductCommentsDialogComponent } from './product-comments-dialog/produc
   styleUrls: ['./exhibition-product.component.scss']
 })
 export class ExhibitionProductComponent implements OnInit {
-  @Input() producerName = 'Garganourakis Farms';
   @Input() liked = false;
   // TODO: should "liked" be an Output also?
-  @Input() likesCount = 0;
+  @Input() popularity = 0;
   @Input() image = '/assets/images/feta.jpg';
   @Input() title = 'Feta';
   @Input() descr = 'Best feta in the world';
@@ -61,9 +60,9 @@ export class ExhibitionProductComponent implements OnInit {
     this.liked = liked;
 
     if (liked) {
-      this.likesCount++;
+      this.popularity++;
     } else {
-      this.likesCount--;
+      this.popularity--;
     }
 
     // TODO: Somehow firebase record for this product must be updated

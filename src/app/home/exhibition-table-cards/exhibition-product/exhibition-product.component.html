@@ -1,4 +1,5 @@
-<md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)">
+<!--<md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)">-->
+<md-card>
   <img md-card-image src="{{image}}">
   <md-card-title>{{title}}</md-card-title>
   <md-card-content>
@@ -9,9 +10,8 @@
     <button md-button (click)="openCommentsDialog()">COMMENTS</button>
     <div fxFlex></div>
     <button md-icon-button color="accent" (click)="like(!liked)">
-      <md-icon *ngIf="liked" class="md-24">favorite</md-icon>
-      <md-icon *ngIf="!liked" class="md-24">favorite_border</md-icon>
+      <md-icon class="md-24 popularity">{{liked? 'favorite': 'favorite_border'}}</md-icon>
     </button>
-    <span id="likesCountSpan" fxFlexAlign="center">{{likesCount}}</span>
+    <span id="likesCountSpan" fxFlexAlign="center">{{popularity}}</span>
   </md-card-actions>
 </md-card>
