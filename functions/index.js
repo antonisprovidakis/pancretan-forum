@@ -22,6 +22,7 @@ exports.deleteProfile = functions.auth.user().onDelete( event => {
 	return admin.database().ref(`/users/${event.data.uid}`).remove();
 });
 
+
 // TODO: uncomment ready functions
 
 // exports.countHoteliers = functions.database.ref('/hoteliers/users').onWrite(event => {
@@ -31,3 +32,6 @@ exports.deleteProfile = functions.auth.user().onDelete( event => {
 // exports.countProducers = functions.database.ref('/producers/users').onWrite(event => {
 //   return event.data.ref.parent.child('producers_count').set(event.data.numChildren());
 // });
+
+
+// TODO: create function to update producer overall popuarity when a product popularity change

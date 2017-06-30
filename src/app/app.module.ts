@@ -12,6 +12,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { CeilPipe } from './shared/pipes/ceil.pipe';
+import { CapitalPipe } from './shared/pipes/capital.pipe';
 
 import {
   MdButtonModule,
@@ -48,7 +50,12 @@ import { InterestsComponent } from './home/interests/interests.component';
 import { ScheduleOfDayComponent } from './home/schedule-of-day/schedule-of-day.component';
 import { ExhibitionTableCardsComponent } from './home/exhibition-table-cards/exhibition-table-cards.component';
 import { ExhibitionTableCardComponent } from './home/exhibition-table-cards/exhibition-table-card/exhibition-table-card.component';
-import { ExhibitionProductComponent } from './home/exhibition-table-cards/exhibition-product/exhibition-product.component';
+import {
+  ExhibitionProductComponent
+} from './home/exhibition-table-cards/exhibition-product/exhibition-product.component';
+import {
+  ProductCommentsDialogComponent
+} from './home/exhibition-table-cards/exhibition-product/product-comments-dialog/product-comments-dialog.component';
 import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibition-table/exhibition-table.component';
 import { LoggedComponent } from './logged/logged.component';
 
@@ -57,6 +64,8 @@ import { AppGuard } from './app.guard';
 
 @NgModule({
   declarations: [
+    CeilPipe,
+    CapitalPipe,
     AppComponent,
     LoginComponent,
     RegistrationComponent,
@@ -72,6 +81,7 @@ import { AppGuard } from './app.guard';
     ExhibitionTableCardsComponent,
     ExhibitionTableCardComponent,
     ExhibitionProductComponent,
+    ProductCommentsDialogComponent,
     ExhibitionTableComponent,
     LoggedComponent
   ],
@@ -100,6 +110,7 @@ import { AppGuard } from './app.guard';
     MdListModule,
     MdProgressSpinnerModule
   ],
+  entryComponents: [ProductCommentsDialogComponent],
   providers: [AuthenticationService, AppGuard],
   bootstrap: [AppComponent]
 })

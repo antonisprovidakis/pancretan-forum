@@ -1,3 +1,13 @@
-<p>
-  exhibition-table-card works!
-</p>
+<md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)">
+  <img md-card-image src="{{image}}">
+  <md-card-title>{{title}}</md-card-title>
+  <md-card-content>
+    <p>{{descr}}</p>
+  </md-card-content>
+  <md-card-actions>
+    <button md-button (click)="seeProducts()">SEE PRODUCTS</button>
+    <div fxFlex></div>
+    <md-icon fxFlexAlign="center" class="md-24" color="accent">favorite</md-icon>
+    <span id="likesCountSpan" fxFlexAlign="center">{{likesCount}}</span>
+  </md-card-actions>
+</md-card>

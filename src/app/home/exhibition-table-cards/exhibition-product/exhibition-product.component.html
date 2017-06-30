@@ -1,20 +1,17 @@
-<!--<div class="ui raised card">
-  <div class="image">
-    <img src="assets/images/{{image}}">
-  </div>
-  <div class="content">
-    <div class="header">{{title}}</div>
-    <div class="description">
-      {{descr}}
-    </div>
-  </div>
-  <div class="extra content">
-    <span class="right floated like" (click)="like(!liked)">
-      <i class="like large icon" [class.red]="liked"></i>
-        {{likesCount}}
-    </span>
-    <a>
-      ASK A QUESTION
-    </a>
-  </div>
-</div>-->
+<md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)">
+  <img md-card-image src="{{image}}">
+  <md-card-title>{{title}}</md-card-title>
+  <md-card-content>
+    <p>{{descr}}</p>
+  </md-card-content>
+  <md-card-actions>
+    <button md-button>ASK A QUESTION</button>
+    <button md-button (click)="openCommentsDialog()">COMMENTS</button>
+    <div fxFlex></div>
+    <button md-icon-button color="accent" (click)="like(!liked)">
+      <md-icon *ngIf="liked" class="md-24">favorite</md-icon>
+      <md-icon *ngIf="!liked" class="md-24">favorite_border</md-icon>
+    </button>
+    <span id="likesCountSpan" fxFlexAlign="center">{{likesCount}}</span>
+  </md-card-actions>
+</md-card>
