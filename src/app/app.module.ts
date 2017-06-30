@@ -12,7 +12,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { CeilPipe } from './shared/pipes/ceil.pipe';
 import { CapitalPipe } from './shared/pipes/capital.pipe';
 
 import {
@@ -64,7 +63,6 @@ import { AppGuard } from './app.guard';
 
 @NgModule({
   declarations: [
-    CeilPipe,
     CapitalPipe,
     AppComponent,
     LoginComponent,
