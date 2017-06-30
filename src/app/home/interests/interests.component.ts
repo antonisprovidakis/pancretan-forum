@@ -12,27 +12,87 @@ export class InterestsComponent implements OnInit {
 
   /* interests must contain all possible values, with user interests preselected */
   // default values
-  @Input() interests: InterestObject[] = [
-    { name: 'potato', value: 'potato', checked: true },
-    { name: 'tomato', value: 'tomato', checked: true },
-    { name: 'beaf', value: 'beaf', checked: false },
-    { name: 'pork', value: 'pork', checked: true },
-    { name: 'cheese', value: 'cheese', checked: true }
-  ];
+  @Input() interests: string[] = ['potato', 'tomato'];
+  @Output() interestsChange = new EventEmitter<string[]>();
 
+  @Input() allInterests: string[] = ['potato', 'tomato', 'beaf', 'pork', 'cheese'];
+
+  viewInterests: any[] = [];
   constructor() { }
 
   ngOnInit() {
+    this.viewInterests = [];
+    // return a sruct like this:
+    // [
+    //   { name: 'potato', value: 'potato', checked: true },
+    //   { name: 'tomato', value: 'tomato', checked: true },
+    //   { name: 'beaf', value: 'beaf', checked: false },
+    //   { name: 'pork', value: 'pork', checked: true },
+    //   { name: 'cheese', value: 'cheese', checked: true }
+    // ]
+    for (let interest of this.allInterests) {
+      this.viewInterests.push({
+        name: interest,
+        value: interest,
+        checked: false
+      });
+    }
+
+    this.viewInterests.forEach(interest => {
+      for (let userInterest of this.interests) {
+        if (interest.name === userInterest) {
+          interest.checked = true;
+        }
+      }
+    });
+  }
+
+  toggleInterestFromArray(event) {
+    this.updateViewInterests(event.source.value, event.checked);
+    const newInterests = this.viewInterests.filter(opt => opt.checked)
+      .map(opt => opt.value);
+    // TODO: implement
+    this.interestsChange.emit(newInterests);
   }
 
   get selectedOptions() {
-    return this.interests.filter(opt => opt.checked)
-      .map(opt => opt.value)
+    let viewInterests = [];
+    // return a sruct like this:
+    // [
+    //   { name: 'potato', value: 'potato', checked: true },
+    //   { name: 'tomato', value: 'tomato', checked: true },
+    //   { name: 'beaf', value: 'beaf', checked: false },
+    //   { name: 'pork', value: 'pork', checked: true },
+    //   { name: 'cheese', value: 'cheese', checked: true }
+    // ]
+    for (let interest of this.allInterests) {
+      viewInterests.push({
+        name: interest,
+        value: interest,
+        checked: false
+      });
+    }
+
+    viewInterests.forEach(interest => {
+      for (let userInterest of this.interests) {
+        if (interest.name === userInterest) {
+          interest.checked = true;
+        }
+      }
+    });
+
+    return viewInterests;
   }
 
-  test() {
-    // console.log(JSON.stringify(this.interests, null, 2));
-    console.log(this.selectedOptions);
+  updateViewInterests(changedInterest, checked){
+
+    this.viewInterests.forEach(interest => {
+      if(interest.value === changedInterest){
+        interest.checked = checked;
+      }
+
+    })
+
   }
 
 

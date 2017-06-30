@@ -1,10 +1,8 @@
-<!--<div class="ui form">
-  <div class="grouped fields">
-    <label>Interests</label>
-      <div class="field" *ngFor="let interest of interests">
-          <sui-checkbox name="{{interest.name}}" [(ngModel)]="interest.checked">
-              {{interest.value}}
-          </sui-checkbox>
-      </div>
+<div>
+  <h2>Interests</h2>
+  <div class="field" *ngFor="let interest of viewInterests">
+    <md-checkbox [checked]="interest.checked" [value]="interest.value" (change)="toggleInterestFromArray($event)">
+      {{interest.name}}
+    </md-checkbox>
   </div>
-</div>-->
+</div>
