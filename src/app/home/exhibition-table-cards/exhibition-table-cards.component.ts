@@ -21,21 +21,21 @@ export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
 
   // runs whenever input properties change
   ngOnChanges(changes: SimpleChanges): void {
-    // const newProducerIDs = changes.producerIDs.currentValue;
+    const newProducerIDs = changes.producerIDs.currentValue;
 
-    // newProducerIDs.forEach(producerUID => {
+    newProducerIDs.forEach(producerUID => {
 
-    //   // TODO: for every producerUID fetch data, create a table object and push it into this.tables
+      // TODO: for every producerUID fetch data, create a table object and push it into this.tables
 
-    //   this.tables.push(
-    //     {
-    //       producerName: 'Mamra farrsd',
-    //       descr: 'Some descra15dsa4d5',
-    //       image: 'garg-farm.png',
-    //       popularity: 6
-    //     }
-    //   );
-    // });
+      this.tables.push(
+        {
+          producerName: 'Mamra farrsd',
+          descr: 'Some descra15dsa4d5',
+          image: 'garg-farm.png',
+          popularity: 6
+        }
+      );
+    });
 
   }
 

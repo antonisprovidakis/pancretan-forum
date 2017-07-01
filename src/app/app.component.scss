@@ -1,3 +1,17 @@
+app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%  !important;
+}
+
 #mainContent {
-  margin: 16px;
+  margin-top: 80px;
+  margin-bottom: 16px;
+  margin-right: 16px;
+  margin-left: 16px;
+  // position: absolute;
+  // top: 64px;
+  // overflow: auto;
 }
