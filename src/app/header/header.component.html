@@ -5,38 +5,13 @@
       PanCretan Forum
     </span>
     <a md-button routerLink="/home" *ngIf="authService.isAuthenticated()">HOME</a>
-    <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role=='chamber'">FORUM STATUS</a>
+    <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role==='chamber'">FORUM STATUS</a>
     <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated()">SCHEDULE</a>
     <a md-button routerLink="/people" *ngIf="authService.isAuthenticated()">PEOPLE</a>
     <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated()">CONTACT</a>
   </div>
-  <!--<button md-button (click)="logout()" *ngIf="authService.isAuthenticated()">-->
   <button md-button *ngIf="authService.isAuthenticated()" (click)="logout()">
     LOG OUT
     <md-icon class="md-24">exit_to_app</md-icon>
   </button>
 </md-toolbar>
-
-<!--<div class="ui menu">
-  <div class="header item">
-    Pan-Cretan Forum
-  </div>
-  <a class="item" [routerLink]="['/home']" routerLinkActive="active">
-    Forum
-  </a>
-  <a class="item" *ngIf="role=='chamber'" [routerLink]="['/forum']">
-    Forum Status
-  </a>
-  <a class="item" [routerLink]="['/schedule']" routerLinkActive="active">
-    Schedule
-  </a>
-  <a class="item" [routerLink]="['/people']" routerLinkActive="active">
-    People
-  </a>
-  <a class="item" [routerLink]="['/contact']" routerLinkActive="active">
-    Contact
-  </a>
-  <a class="ui secondary item right" (click)="logout()" *ngIf="authService.isAuthenticated()">
-    Logout
-  </a>
-</div>-->

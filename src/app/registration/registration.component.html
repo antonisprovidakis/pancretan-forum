@@ -18,8 +18,8 @@
           <input mdInput placeholder="Company" formControlName="company">
         </md-input-container>
         <md-select placeholder="Interests" name="interests" formControlName="interests" multiple>
-          <md-option *ngFor="let interest of allInterests | async" [value]="interest.$value">
-            {{interest.$value | capital}}
+          <md-option *ngFor="let interest of allInterests" [value]="interest">
+            {{interest | capital}}
           </md-option>
         </md-select>
       </form>

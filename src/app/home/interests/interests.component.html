@@ -1,8 +1,10 @@
 <div>
   <h2>Interests</h2>
   <div class="field" *ngFor="let interest of viewInterests">
-    <md-checkbox [checked]="interest.checked" [value]="interest.value" (change)="toggleInterestFromArray($event)">
-      {{interest.name}}
+    <md-checkbox [checked]="interest.checked" [value]="interest.value"
+    [(ngModel)]="interest.checked"
+     (change)="getCheckedInterests()">
+      {{interest.name | capital}}
     </md-checkbox>
   </div>
 </div>

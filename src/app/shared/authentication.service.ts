@@ -2,19 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
 import 'rxjs/add/operator/take';
-
-// interface IUser {
-//   name: string;
-//   email: string;
-//   photoURL: string;
-//   role?: string;
-// }
 
 @Injectable()
 export class AuthenticationService {
@@ -25,7 +17,6 @@ export class AuthenticationService {
   private displayName: string = null;
   private email: string = null;
   private uid: string = null
-  // private role: string = null;
 
   constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) {
     this.user = afAuth.authState;
@@ -35,37 +26,13 @@ export class AuthenticationService {
         this.displayName = authData.displayName;
         this.email = authData.email;
         this.uid = authData.uid;
-        // this.role = null;
         console.log('from service - login');
       } else {
         this.authenticated = false;
         this.displayName = null;
         this.email = null;
         this.uid = null;
-        // this.role = null;
         console.log('from service - logout');
-      }
-    });
-  }
-
-
-  get roleObservable(): Observable<string> {
-    return new Observable(observer => {
-      if (this.authenticated) {
-        this.db.object('/users/' + this.uid + '/role').take(1).subscribe(
-          (roleData) => {
-            const role = roleData.$value;
-            if (role) {
-              observer.next(role);
-            } else {
-              observer.next(null);
-            }
-            observer.complete();
-          }
-        );
-      } else {
-        observer.next(null);
-        observer.complete();
       }
     });
   }
@@ -75,7 +42,8 @@ export class AuthenticationService {
   }
 
   getCurrentUser(): Observable<firebase.User> {
-    return this.authenticated ? this.user : null;
+    // return this.authenticated ? this.user : null;
+    return this.user;
   }
 
   getUID(): string {
@@ -89,7 +57,6 @@ export class AuthenticationService {
   getDisplayName(): string {
     return this.authenticated ? this.displayName : '';
   }
-
 
   loginWithGoogle() {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());

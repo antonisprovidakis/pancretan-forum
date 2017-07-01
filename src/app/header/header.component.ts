@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../shared/authentication.service';
-
+import { DatabaseApiService } from '../shared/database-api.service';
 
 @Component({
   selector: 'app-header',
@@ -12,19 +12,24 @@ import { AuthenticationService } from '../shared/authentication.service';
 })
 export class HeaderComponent implements OnInit {
 
+  role = 'anonymous';
 
-  role = 'hotelier';
-
-  constructor(public authService: AuthenticationService, private router: Router) { }
+  constructor(public authService: AuthenticationService, public dbApi: DatabaseApiService, private router: Router) { }
 
   ngOnInit() {
+    this.authService.getCurrentUser().subscribe((authData) => {
+      if(authData){
+        this.dbApi.getUserRole().subscribe(role => this.role = role);
+      }
+    });
   }
 
   logout() {
     this.authService.logout().then(
       () => {
-        console.log('logout');
+        this.role = 'anonymous';
         this.router.navigate(['/login'])
+        console.log('logout');
       });
   }
 

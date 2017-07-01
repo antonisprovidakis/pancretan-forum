@@ -59,6 +59,7 @@ import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibiti
 import { LoggedComponent } from './logged/logged.component';
 
 import { AuthenticationService } from './shared/authentication.service';
+import { DatabaseApiService } from './shared/database-api.service';
 import { AppGuard } from './app.guard';
 
 @NgModule({
@@ -109,7 +110,11 @@ import { AppGuard } from './app.guard';
     MdProgressSpinnerModule
   ],
   entryComponents: [ProductCommentsDialogComponent],
-  providers: [AuthenticationService, AppGuard],
+  providers: [
+    AuthenticationService,
+    AppGuard,
+    DatabaseApiService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

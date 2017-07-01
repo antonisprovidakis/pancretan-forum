@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder, Validator } from '@angular/forms';
+import { FormGroup, FormControl, Validator } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-
 import { AuthenticationService } from '../shared/authentication.service';
+import { DatabaseApiService } from '../shared/database-api.service';
 
 interface RegistrationDetails {
-  // name: string;
-  // email: string;
   role: string;
   company: string;
   interests?: string[];
@@ -21,30 +18,25 @@ interface RegistrationDetails {
 })
 export class RegistrationComponent implements OnInit {
 
-  allInterests: FirebaseListObservable<string[]>;
-
-  // allInterests: string[] = [
-  //   'potato',
-  //   'tomato',
-  //   'beaf',
-  //   'pork',
-  //   'cheese'
-  // ];
+  allInterests: string[] = [
+    'potato',
+    'tomato',
+    'beaf',
+    'pork',
+    'cheese'
+  ];
 
   registrationForm: FormGroup;
 
   constructor(
     private authService: AuthenticationService,
-    private db: AngularFireDatabase,
-    private router: Router,
-    private formBuilder: FormBuilder
-  ) {
+    public dbApi: DatabaseApiService,
+    private router: Router
+  ) { }
 
-    this.allInterests = db.list('/interests');
-
-
+  ngOnInit() {
     // TODO: problem when refreshing page. Although authService data is available
-    // form group doesn't init with vaulus
+    // form group doesn't init with values. Maybe move into below getCurrentUser subscription
     this.registrationForm = new FormGroup({
       name: new FormControl({ value: this.authService.getDisplayName(), disabled: true }),
       email: new FormControl({ value: this.authService.getEmail(), disabled: true }),
@@ -52,35 +44,22 @@ export class RegistrationComponent implements OnInit {
       role: new FormControl(),
       interests: new FormControl()
     })
-  }
 
-  ngOnInit() {
+    this.authService.getCurrentUser().subscribe(authData => {
+      if (authData) {
+        this.dbApi.getAllInterests().subscribe(allInterests => this.allInterests = allInterests);
+      }
+    });
   }
 
   enterForum() {
-    // console.log('regitration form: ', this.registrationForm.value);
-
-    // const n = this.authService.getDisplayName();
-    // const e = this.authService.getEmail();
-    // const u = this.authService.getUID();
-    // const d = {
-    //   n: n,
-    //   e: e,
-    //   u: u
-    // };
-
-    // console.log('authData: ', d);
-
     const formData: RegistrationDetails = this.registrationForm.value;
     this.saveRole(formData);
   }
 
   private saveRole(data: RegistrationDetails) {
-    console.log('DATA: ', data);
-
-
     if (data.role) {
-      this.db.object('/users/' + this.authService.getUID()).update({ role: data.role });
+      this.dbApi.updateUserRole(this.authService.getUID(), data.role);
       console.log('save role');
 
       this.createRoleProfile(data);
@@ -104,23 +83,16 @@ export class RegistrationComponent implements OnInit {
     const repr_hotel = data.company;
     const interests = data.interests;
 
-    this.db.object('/hoteliers/users/' + this.authService.getUID()).set({
-      repr_hotel: repr_hotel,
-      interests: interests
-    });
+    this.dbApi.createHotelierProfile(repr_hotel, interests);
     console.log('save HotelierProfile');
-
   }
+
   private createProducerProfile(data: RegistrationDetails) {
     const prod_name = data.company;
     const interests = data.interests;
 
-    this.db.object('/producers/users/' + this.authService.getUID()).set({
-      prod_name: prod_name,
-      interests: interests
-    });
+    this.dbApi.createProducerProfile(prod_name, interests);
     console.log('save ProducerProfile');
-
   }
 
 }

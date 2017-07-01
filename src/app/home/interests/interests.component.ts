@@ -21,15 +21,13 @@ export class InterestsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.viewInterests = [];
-    // return a sruct like this:
+    
     // [
     //   { name: 'potato', value: 'potato', checked: true },
-    //   { name: 'tomato', value: 'tomato', checked: true },
-    //   { name: 'beaf', value: 'beaf', checked: false },
-    //   { name: 'pork', value: 'pork', checked: true },
-    //   { name: 'cheese', value: 'cheese', checked: true }
+    //   { name: 'tomato', value: 'tomato', checked: true }
     // ]
+    this.viewInterests = [];
+
     for (let interest of this.allInterests) {
       this.viewInterests.push({
         name: interest,
@@ -42,75 +40,16 @@ export class InterestsComponent implements OnInit {
       for (let userInterest of this.interests) {
         if (interest.name === userInterest) {
           interest.checked = true;
+          break;
         }
       }
     });
   }
 
-  toggleInterestFromArray(event) {
-    this.updateViewInterests(event.source.value, event.checked);
+  getCheckedInterests() {
     const newInterests = this.viewInterests.filter(opt => opt.checked)
       .map(opt => opt.value);
-    // TODO: implement
     this.interestsChange.emit(newInterests);
   }
-
-  get selectedOptions() {
-    let viewInterests = [];
-    // return a sruct like this:
-    // [
-    //   { name: 'potato', value: 'potato', checked: true },
-    //   { name: 'tomato', value: 'tomato', checked: true },
-    //   { name: 'beaf', value: 'beaf', checked: false },
-    //   { name: 'pork', value: 'pork', checked: true },
-    //   { name: 'cheese', value: 'cheese', checked: true }
-    // ]
-    for (let interest of this.allInterests) {
-      viewInterests.push({
-        name: interest,
-        value: interest,
-        checked: false
-      });
-    }
-
-    viewInterests.forEach(interest => {
-      for (let userInterest of this.interests) {
-        if (interest.name === userInterest) {
-          interest.checked = true;
-        }
-      }
-    });
-
-    return viewInterests;
-  }
-
-  updateViewInterests(changedInterest, checked){
-
-    this.viewInterests.forEach(interest => {
-      if(interest.value === changedInterest){
-        interest.checked = checked;
-      }
-
-    })
-
-  }
-
-
-  /*
-  --- Provide data for "interests" property like this:
-  interests: InterestObject[] = [
-    { name: 'potato', value: 'potato', checked: true },
-    { name: 'tomato', value: 'tomato', checked: true }
-  ]
-
-
-
-  --- Access selected options like the example below: ---
-
-    <app-interests [interests]="interests" #inter></app-interests>
-    <div>
-      <p>Currently selected: {{inter.selectedOptions | json}}</p>
-    </div>
-  */
 
 }

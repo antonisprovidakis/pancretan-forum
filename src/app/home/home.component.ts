@@ -5,6 +5,7 @@ import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/databa
 import 'rxjs/add/operator/take';
 
 import { AuthenticationService } from '../shared/authentication.service';
+import { DatabaseApiService } from '../shared/database-api.service';
 
 @Component({
   selector: 'app-home',
@@ -15,34 +16,31 @@ export class HomeComponent implements OnInit {
 
   allInterests: string[];
   userInterests: string[];
+
   constructor(
     private authService: AuthenticationService,
-    private db: AngularFireDatabase
+    private dbApi: DatabaseApiService
   ) { }
 
   ngOnInit() {
 
-    //get all interests from the db
-    this.db.list('/interests').subscribe(
+    this.dbApi.getAllInterests().subscribe(
       dbInterests => {
-        this.allInterests = dbInterests.map(interest => interest.$value);
-      });
+        this.allInterests = dbInterests;
+      }
+    );
 
     this.authService.getCurrentUser().subscribe(
       user => {
-
-        //get current user role
-        this.authService.roleObservable.subscribe(
-          role => {
-            //get curent user interests
-            this.db.list('/' + role + 's/users/' + this.authService.getUID() + '/interests')
-              .subscribe(userInterests => {
-
-                this.userInterests = userInterests
-                  .map(userInterest => userInterest.$value);
-              });
-          });
+        if (user) {
+          this.dbApi.getUserRole().take(1).subscribe(
+            role => {
+              this.dbApi.getCurrentUserInterests(this.authService.getUID(), role)
+                .subscribe(userInterests => {
+                  this.userInterests = userInterests;
+                });
+            });
+        }
       });
   }
-
 }

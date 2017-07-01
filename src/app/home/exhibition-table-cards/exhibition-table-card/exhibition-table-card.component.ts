@@ -17,6 +17,6 @@ export class ExhibitionTableCardComponent implements OnInit {
   }
 
   seeProducts() {
-    // navigate to table, according to uid (check firebase)
+    // TODO: navigate to table, according to uid (check firebase)
   }
 }
