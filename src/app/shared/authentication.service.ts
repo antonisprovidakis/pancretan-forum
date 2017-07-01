@@ -13,7 +13,7 @@ export class AuthenticationService {
 
   private user: Observable<firebase.User>;
 
-  private authenticated = true;
+  private authenticated = false;
   private displayName: string = null;
   private email: string = null;
   private uid: string = null
