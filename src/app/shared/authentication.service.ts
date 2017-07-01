@@ -58,7 +58,7 @@ export class AuthenticationService {
     return this.authenticated ? this.displayName : '';
   }
 
-  loginWithGoogle() {
+  signinWithGoogle() {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 

@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 
 import 'rxjs/add/operator/take';
 
+import {DomSanitizer} from '@angular/platform-browser';
+import {MdIconRegistry} from '@angular/material';
+
 import { AuthenticationService } from '../shared/authentication.service';
 import { DatabaseApiService } from '../shared/database-api.service';
 
@@ -17,8 +20,19 @@ export class LoginComponent implements OnInit {
   numOfHoteliers = 0;
   numOfProducers = 0;
 
-  constructor(public authService: AuthenticationService, public dbApi: DatabaseApiService, private router: Router) {
+  constructor(
+    public authService: AuthenticationService,
+    public dbApi: DatabaseApiService,
+    private router: Router,
+    mdIconRegistry: MdIconRegistry,
+    sanitizer: DomSanitizer) {
 
+    mdIconRegistry
+      // .addSvgIcon('google', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/google.svg'))
+      .addSvgIcon('google-plus', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/google-plus.svg'))
+      .addSvgIcon('facebook', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/facebook.svg'))
+      .addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/twitter.svg'))
+      .addSvgIcon('minotaur', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/logo/minotaur.svg'));
   }
 
   ngOnInit() {
@@ -38,7 +52,13 @@ export class LoginComponent implements OnInit {
     this.dbApi.getProducersCount().subscribe(count => this.numOfProducers = count);
   }
 
-  loginGoogle() {
-    this.authService.loginWithGoogle();
+  signinGoogle() {
+    this.authService.signinWithGoogle();
+  }
+
+  signinFacebook() {
+  }
+
+  signinTwitter() {
   }
 }

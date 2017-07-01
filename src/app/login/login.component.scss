@@ -7,7 +7,21 @@ md-card {
   max-width: 500px;
 }
 
-#googleLogInButton {
+#socialButtonsContainer {
+}
+
+#googleSignInButton {
   color: white;
   background-color: #dd4b39;
 }
+
+#facebookSignInButton {
+  color: white;
+  background-color: #4867aa;
+}
+
+#twitterSignInButton {
+  color: white;
+  background-color: #1da1f2;
+}
+
