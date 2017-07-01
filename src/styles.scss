@@ -19,6 +19,9 @@ md-toolbar-row {
   justify-content: space-between;
 }
 
-md-icon.popularity {
-  color: red;
+md-icon{
+  &.popularity {
+    color: red;
+  }
+
 }
