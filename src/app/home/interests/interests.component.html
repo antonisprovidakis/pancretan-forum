@@ -1,10 +1,3 @@
-<div>
-  <h2>Interests</h2>
-  <div class="field" *ngFor="let interest of viewInterests">
-    <md-checkbox [checked]="interest.checked" [value]="interest.value"
-    [(ngModel)]="interest.checked"
-     (change)="getCheckedInterests()">
-      {{interest.name | capital}}
-    </md-checkbox>
-  </div>
-</div>
+<md-select multiple placeholder="Interests" [(ngModel)]="interests" (change)="fireInterestsChangeEvent($event)">
+   <md-option *ngFor="let interest of allInterests" [value]="interest">{{interest | capital}}</md-option>
+</md-select>
