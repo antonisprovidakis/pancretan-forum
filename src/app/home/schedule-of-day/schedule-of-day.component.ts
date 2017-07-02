@@ -19,9 +19,7 @@ export class ScheduleOfDayComponent implements OnInit {
     {
       meetingWith: 'User Farms',
       time: '09:30'
-    },
-
-
+    }
   ]
 
   constructor() { }
@@ -30,20 +28,19 @@ export class ScheduleOfDayComponent implements OnInit {
   }
 
   attendMeeting() {
-    //TODO: implement what attend button should do.
+    // TODO: implement what attend button should do.
     console.log('attended');
-
   }
 
   displayAttendButton(meetingTime: string): boolean {
-    let today = new Date();
-    let mTime = new Date();
+    const today = new Date();
+    const mTime = new Date();
 
     let h, min;
     [h, min] = meetingTime.split(/[:.]/);
 
-    mTime.setHours(parseInt(h));
-    mTime.setMinutes(parseInt(min) + 2);
+    mTime.setHours(parseInt(h, 10));
+    mTime.setMinutes(parseInt(min, 10) + 2);
     return mTime.getTime() > today.getTime();
   }
 
