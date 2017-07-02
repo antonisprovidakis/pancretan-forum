@@ -5,6 +5,8 @@ import { Subject } from 'rxjs/Subject';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
+const PROFILE_PLACEHOLDER_IMAGE_URL = '/assets/images/profile_placeholder.png';
+
 @Injectable()
 export class AuthenticationService {
 
@@ -31,6 +33,10 @@ export class AuthenticationService {
   getCurrentUser(): Observable<firebase.User> {
     // return this.authenticated ? this.user : null;
     return this.user;
+  }
+
+  getPhotoURL(): string {
+    return this.userInstance ? this.userInstance.photoURL : PROFILE_PLACEHOLDER_IMAGE_URL;
   }
 
   getUID(): string {
