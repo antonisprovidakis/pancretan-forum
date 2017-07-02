@@ -2,11 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
-
-import 'rxjs/add/operator/take';
 
 @Injectable()
 export class AuthenticationService {
@@ -18,7 +15,7 @@ export class AuthenticationService {
   private email: string = null;
   private uid: string = null
 
-  constructor(public afAuth: AngularFireAuth, private db: AngularFireDatabase) {
+  constructor(public afAuth: AngularFireAuth) {
     this.user = afAuth.authState;
     this.user.subscribe((authData) => {
       if (authData) {
