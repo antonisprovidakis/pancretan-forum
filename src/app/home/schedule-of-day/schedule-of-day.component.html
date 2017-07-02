@@ -1,3 +1,16 @@
-<p>
-  schedule-of-day works!
-</p>
+<div fxLayout="column">
+  <div class="today-schedule-title bottom-border">
+    <span>Today's Schedule</span>
+    <hr>
+  </div>
+  <div id="meetingsContainer">
+    <div *ngFor="let meeting of meetings">
+      <div class="today-schedule-content-text">
+        <span>{{meeting.time}}</span>
+        <span *ngIf="displayAttendButton(meeting.time)" class="attend-btn" (click)="attendMeeting()">attend</span><br>
+      </div>
+      <span>{{meeting.meetingWith}}</span>
+      <hr>
+    </div>
+  </div>
+</div>

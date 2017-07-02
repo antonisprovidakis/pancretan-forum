@@ -2,8 +2,8 @@
   <div fxLayout="column" fxFlex="128px">
     <app-interests class="sticky" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
   </div>
-  <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3', 'uid4']"></app-exhibition-table-cards>
+  <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3', 'uid3']"></app-exhibition-table-cards>
   <div fxFlex="160px">
-    <span class="sticky">schedule of day goes here</span>
+    <app-schedule-of-day class="sticky"></app-schedule-of-day>
   </div>
 </div>
