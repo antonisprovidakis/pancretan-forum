@@ -59,18 +59,18 @@ export class DatabaseApiService {
   }
 
   updateUserRole(uid: string, role: string) {
-    this.db.object('/users/' + uid).update({ role: role });
+    return this.db.object('/users/' + uid).update({ role: role });
   }
 
   createHotelierProfile(hotel: string, interests: string[]) {
-    this.db.object('/hoteliers/users/' + this.authService.getUID()).set({
+    return this.db.object('/hoteliers/users/' + this.authService.getUID()).set({
       repr_hotel: hotel,
       interests: interests
     });
   }
 
   createProducerProfile(producerName: string, interests: string[]) {
-    this.db.object('/producers/users/' + this.authService.getUID()).set({
+    return this.db.object('/producers/users/' + this.authService.getUID()).set({
       prod_name: producerName,
       interests: interests
     });

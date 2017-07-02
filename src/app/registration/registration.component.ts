@@ -1,6 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validator } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/takeUntil';
 
 import { AuthenticationService } from '../shared/authentication.service';
 import { DatabaseApiService } from '../shared/database-api.service';
@@ -16,7 +20,8 @@ interface RegistrationDetails {
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   allInterests: string[] = [
     'potato',
@@ -32,24 +37,35 @@ export class RegistrationComponent implements OnInit {
     private authService: AuthenticationService,
     public dbApi: DatabaseApiService,
     private router: Router
-  ) { }
+  ) {
+    this.registrationForm = this.createForm();
+  }
 
   ngOnInit() {
-    // TODO: problem when refreshing page. Although authService data is available
-    // form group doesn't init with values. Maybe move into below getCurrentUser subscription
-    this.registrationForm = new FormGroup({
-      name: new FormControl({ value: this.authService.getDisplayName(), disabled: true }),
-      email: new FormControl({ value: this.authService.getEmail(), disabled: true }),
+    this.authService.getCurrentUser().takeUntil(this.ngUnsubscribe).subscribe(authData => {
+      if (authData) {
+
+        this.registrationForm.controls['name'].setValue(this.authService.getDisplayName());
+        this.registrationForm.controls['email'].setValue(this.authService.getEmail());
+
+        this.dbApi.getAllInterests().takeUntil(this.ngUnsubscribe).subscribe(allInterests => this.allInterests = allInterests);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
+
+  private createForm(): FormGroup {
+    return new FormGroup({
+      name: new FormControl({ value: '', disabled: true }),
+      email: new FormControl({ value: '', disabled: true }),
       company: new FormControl(),
       role: new FormControl(),
       interests: new FormControl()
     })
-
-    this.authService.getCurrentUser().subscribe(authData => {
-      if (authData) {
-        this.dbApi.getAllInterests().subscribe(allInterests => this.allInterests = allInterests);
-      }
-    });
   }
 
   enterForum() {
@@ -79,7 +95,6 @@ export class RegistrationComponent implements OnInit {
   }
 
   private createHotelierProfile(data: RegistrationDetails) {
-
     const repr_hotel = data.company;
     const interests = data.interests;
 

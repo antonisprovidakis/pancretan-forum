@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/takeUntil';
 
-import {DomSanitizer} from '@angular/platform-browser';
-import {MdIconRegistry} from '@angular/material';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MdIconRegistry } from '@angular/material';
 
 import { AuthenticationService } from '../shared/authentication.service';
 import { DatabaseApiService } from '../shared/database-api.service';
@@ -14,7 +16,9 @@ import { DatabaseApiService } from '../shared/database-api.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
   title = 'Pan-Cretan Forum';
 
   numOfHoteliers = 0;
@@ -28,19 +32,18 @@ export class LoginComponent implements OnInit {
     sanitizer: DomSanitizer) {
 
     mdIconRegistry
-      // .addSvgIcon('google', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/google.svg'))
       .addSvgIcon('google-plus', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/google-plus.svg'))
       .addSvgIcon('facebook', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/facebook.svg'))
-      .addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/twitter.svg'))
-      .addSvgIcon('minotaur', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/logo/minotaur.svg'));
+      .addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/twitter.svg'));
+    // .addSvgIcon('minotaur', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/logo/minotaur.svg'));
   }
 
   ngOnInit() {
-    this.authService.getCurrentUser().subscribe((authData) => {
+    this.authService.getCurrentUser().takeUntil(this.ngUnsubscribe).subscribe((authData) => {
       if (authData) {
         this.dbApi.getUserRole().take(1).subscribe(role => {
           if (role) {
-            this.router.navigate(['/home']); //TODO: maybe pass as router param
+            this.router.navigate(['/home']); // TODO: maybe pass role as router param
           } else {
             this.router.navigate(['/register']);
           }
@@ -48,8 +51,16 @@ export class LoginComponent implements OnInit {
       }
     });
 
-    this.dbApi.getHoteliersCount().subscribe(count => this.numOfHoteliers = count);
-    this.dbApi.getProducersCount().subscribe(count => this.numOfProducers = count);
+    this.dbApi.getHoteliersCount().takeUntil(this.ngUnsubscribe)
+      .subscribe(count => this.numOfHoteliers = count);
+
+    this.dbApi.getProducersCount().takeUntil(this.ngUnsubscribe)
+      .subscribe(count => this.numOfProducers = count);
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   signinGoogle() {

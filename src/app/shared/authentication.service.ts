@@ -62,7 +62,7 @@ export class AuthenticationService {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
-  logout() {
+  signout() {
     return this.afAuth.auth.signOut();
   }
 

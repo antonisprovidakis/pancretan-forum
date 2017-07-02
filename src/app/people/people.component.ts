@@ -9,7 +9,7 @@ declare var $: any;
 })
 export class PeopleComponent implements OnInit {
 
-  selectedRole = 'Hotelier';
+  selectedRole = 'hotelier';
 
   peopleData = [
     {
