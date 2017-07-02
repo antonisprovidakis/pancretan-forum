@@ -8,7 +8,7 @@
   <md-card-actions>
     <button md-button (click)="seeProducts()">SEE PRODUCTS</button>
     <div fxFlex></div>
-    <md-icon fxFlexAlign="center" class="md-24" [class.popularity]="popularity>0">favorite</md-icon>
+    <md-icon fxFlexAlign="center" [class.popularity]="popularity>0">favorite</md-icon>
     <span id="likesCountSpan" fxFlexAlign="center">{{popularity}}</span>
   </md-card-actions>
 </md-card>

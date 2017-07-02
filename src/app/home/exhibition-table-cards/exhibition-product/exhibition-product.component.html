@@ -10,7 +10,7 @@
     <button md-button (click)="openCommentsDialog()">COMMENTS</button>
     <div fxFlex></div>
     <button md-icon-button color="accent" (click)="like(!liked)">
-      <md-icon class="md-24 popularity">{{liked? 'favorite': 'favorite_border'}}</md-icon>
+      <md-icon class="popularity">{{liked? 'favorite': 'favorite_border'}}</md-icon>
     </button>
     <span id="likesCountSpan" fxFlexAlign="center">{{popularity}}</span>
   </md-card-actions>
