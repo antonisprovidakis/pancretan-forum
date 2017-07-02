@@ -1,6 +1,20 @@
-#user-pic {
-  width: 40px;
-  height: 40px;
-  background-size: 40px;
-  border-radius: 20px;
+#user-container {
+  #user-pic {
+    // top: -3px;
+    // position: relative;
+    // display: inline-block;
+    background-image: url('/assets/images/profile_placeholder.png');
+    background-repeat: no-repeat;
+    width: 40px;
+    height: 40px;
+    background-size: 40px;
+    border-radius: 20px;
+  }
+
+  #user-name {
+    font-size: 16px;
+    line-height: 36px;
+    padding-right: 10px;
+    padding-left: 20px;
+  }
 }
