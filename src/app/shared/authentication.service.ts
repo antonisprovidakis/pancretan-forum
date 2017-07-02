@@ -9,33 +9,23 @@ import * as firebase from 'firebase/app';
 export class AuthenticationService {
 
   private user: Observable<firebase.User>;
-
-  private authenticated = false;
-  private displayName: string = null;
-  private email: string = null;
-  private uid: string = null
+  private userInstance: firebase.User;
 
   constructor(public afAuth: AngularFireAuth) {
     this.user = afAuth.authState;
-    this.user.subscribe((authData) => {
-      if (authData) {
-        this.authenticated = true;
-        this.displayName = authData.displayName;
-        this.email = authData.email;
-        this.uid = authData.uid;
+    this.user.subscribe((user) => {
+      if (user) {
+        this.userInstance = user;
         console.log('from service - login');
       } else {
-        this.authenticated = false;
-        this.displayName = null;
-        this.email = null;
-        this.uid = null;
+        this.userInstance = null;
         console.log('from service - logout');
       }
     });
   }
 
   isAuthenticated(): boolean {
-    return this.authenticated;
+    return !!this.userInstance;
   }
 
   getCurrentUser(): Observable<firebase.User> {
@@ -44,15 +34,15 @@ export class AuthenticationService {
   }
 
   getUID(): string {
-    return this.authenticated ? this.uid : '';
+    return this.userInstance ? this.userInstance.uid : '';
   }
 
   getEmail(): string {
-    return this.authenticated ? this.email : '';
+    return this.userInstance ? this.userInstance.email : '';
   }
 
   getDisplayName(): string {
-    return this.authenticated ? this.displayName : '';
+    return this.userInstance ? this.userInstance.displayName : '';
   }
 
   signinWithGoogle() {
