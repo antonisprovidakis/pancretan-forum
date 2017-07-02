@@ -1,7 +1,9 @@
-<p>
-  home works!
-</p>
-  <app-interests [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
-<div *ngFor="let userInterest of userInterests">
-  <label>{{userInterest}}</label>
+<div fxLayout="row" fxLayoutGap="16px">
+  <div fxLayout="column" fxFlex="15%">
+    <app-interests class="sticky" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
+  </div>
+  <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3']"></app-exhibition-table-cards>
+  <div fxFlex="15%">
+    <span class="sticky">schedule of day goes here</span>
+  </div>
 </div>
