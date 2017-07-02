@@ -59,6 +59,7 @@ import { LoggedComponent } from './logged/logged.component';
 import { AuthenticationService } from './shared/authentication.service';
 import { DatabaseApiService } from './shared/database-api.service';
 import { AppGuard } from './app.guard';
+import { ForumStatusComponent } from './forum-status/forum-status.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { AppGuard } from './app.guard';
     ExhibitionProductComponent,
     ProductCommentsDialogComponent,
     ExhibitionTableComponent,
-    LoggedComponent
+    LoggedComponent,
+    ForumStatusComponent
   ],
   imports: [
     BrowserModule,

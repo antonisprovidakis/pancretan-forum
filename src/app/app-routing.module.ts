@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { HomeComponent } from './home/home.component';
+import { ForumStatusComponent } from './forum-status/forum-status.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { NegotiationsTableComponent } from './negotiations-table/negotiations-table.component';
 import { PeopleComponent } from './people/people.component';
@@ -35,6 +36,10 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'home', component: HomeComponent },
+  { path: 'forum', component: ForumStatusComponent },
+  { path: 'schedule', component: ScheduleComponent },
+  { path: 'people', component: PeopleComponent },
+  { path: 'contact', component: ContactComponent },
   { path: '**', redirectTo: '/login' }
 ];
 
