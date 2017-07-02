@@ -27,7 +27,8 @@ import {
   MdInputModule,
   MdSliderModule,
   MdListModule,
-  MdProgressSpinnerModule
+  MdProgressSpinnerModule,
+  MdMenuModule
 } from '@angular/material';
 
 import 'hammerjs';
@@ -108,7 +109,8 @@ import { ForumStatusComponent } from './forum-status/forum-status.component';
     MdInputModule,
     MdSliderModule,
     MdListModule,
-    MdProgressSpinnerModule
+    MdProgressSpinnerModule,
+    MdMenuModule
   ],
   entryComponents: [ProductCommentsDialogComponent],
   providers: [

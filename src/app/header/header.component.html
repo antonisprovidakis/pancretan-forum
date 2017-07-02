@@ -10,8 +10,19 @@
     <a md-button routerLink="/people" *ngIf="authService.isAuthenticated()">PEOPLE</a>
     <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated()">CONTACT</a>
   </div>
-  <button md-button *ngIf="authService.isAuthenticated()" (click)="signout()">
-    LOG OUT
-    <md-icon>exit_to_app</md-icon>
-  </button>
+  <div *ngIf="authService.isAuthenticated()">
+    <!--<button md-button *ngIf="authService.isAuthenticated()" (click)="signout()">
+      LOG OUT
+      <md-icon>exit_to_app</md-icon>
+    </button>-->
+    <button md-icon-button [mdMenuTriggerFor]="menu">
+      <img id="user-pic" src={{authService.getPhotoURL()}}>
+    </button>
+    <md-menu #menu="mdMenu">
+      <button md-menu-item (click)="signout()">
+        <span>LOG OUT</span>
+        <md-icon>exit_to_app</md-icon>
+      </button>
+    </md-menu>
+  </div>
 </md-toolbar>
