@@ -17,7 +17,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   profilePicStyles: {};
-  role = 'anonymous';
+  role = null;
 
   constructor(public authService: AuthenticationService, public dbApi: DatabaseApiService, private router: Router) { }
 
@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   signout() {
     this.authService.signout().then(
       () => {
-        this.role = 'anonymous';
+        this.role = null;
         this.router.navigate(['/login'])
         console.log('signout');
       });

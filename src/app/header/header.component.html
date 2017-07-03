@@ -4,11 +4,11 @@
       <md-icon>forum</md-icon>
       PanCretan Forum
     </span>
-    <a md-button routerLink="/home" *ngIf="authService.isAuthenticated()">HOME</a>
+    <a md-button routerLink="/home" *ngIf="authService.isAuthenticated() && role">HOME</a>
     <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role==='chamber'">FORUM STATUS</a>
-    <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated()">SCHEDULE</a>
-    <a md-button routerLink="/people" *ngIf="authService.isAuthenticated()">PEOPLE</a>
-    <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated()">CONTACT</a>
+    <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated() && role">SCHEDULE</a>
+    <a md-button routerLink="/people" *ngIf="authService.isAuthenticated() && role">PEOPLE</a>
+    <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated() && role">CONTACT</a>
   </div>
   <div id="user-container" *ngIf="authService.isAuthenticated()" fxLayout fxLayoutAlign="end center">
     <div id="user-pic" [ngStyle]="profilePicStyles"></div>
