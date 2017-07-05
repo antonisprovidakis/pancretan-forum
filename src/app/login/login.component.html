@@ -1,35 +1,37 @@
-<div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="16px">
-  <div id="header" fxLayout="column" fxLayoutAlign="center center">
-    <h1>Welcome to the Pan-Cretan Forum</h1>
-    <div>
-      <span>{{ numOfHoteliers }}</span> {{numOfHoteliers==1? 'Hotelier': 'Hoteliers'}} and
-      <span>{{ numOfProducers }}</span> {{numOfProducers==1? 'Producer': 'Producers'}} of Crete gathered to make business
+<div fxLayout="column" fxLayoutAlign="center center" >
+  <div id="container" fxLayout="column" fxLayoutGap="16px">
+    <div id="header" fxLayout="column">
+      <h1>Welcome to the Pan-Cretan Forum</h1>
+      <div>
+        <span>{{ numOfHoteliers }}</span> {{numOfHoteliers==1? 'Hotelier': 'Hoteliers'}} and
+        <span>{{ numOfProducers }}</span> {{numOfProducers==1? 'Producer': 'Producers'}} of Crete gathered to make business
+      </div>
     </div>
-  </div>
-  <md-card>
-    <md-card-content id="formContainer">
-      <form fxLayout="column">
-        <md-input-container>
-          <input mdInput placeholder="Email" />
-        </md-input-container>
-        <md-input-container>
-          <input mdInput placeholder="Password" />
-        </md-input-container>
-      </form>
-    </md-card-content>
-    <md-card-actions>
-      <button md-raised-button fxFlex color="accent">SIGN IN</button>
-    </md-card-actions>
-  </md-card>
-  <!--<span>or</span>-->
-  <span>You may also connect with:</span>
-  <!--<div id="socialButtonsContainer" fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px" fxLayoutAlign="center">-->
-  <div id="socialButtonsContainer" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="center">
-    <!--<button md-raised-button id="googleSignInButton" (click)="signinGoogle()"><md-icon svgIcon="google-plus"></md-icon> Sign in with Google+</button>
+    <md-card>
+      <md-card-content>
+        <form fxLayout="column">
+          <md-input-container>
+            <input mdInput placeholder="Email" />
+          </md-input-container>
+          <md-input-container>
+            <input mdInput placeholder="Password" />
+          </md-input-container>
+        </form>
+      </md-card-content>
+      <md-card-actions>
+        <button md-raised-button fxFlex color="accent">SIGN IN</button>
+      </md-card-actions>
+    </md-card>
+    <!--<span fxFlexAlign="center">or</span>-->
+    <span fxFlexAlign="center">You may also connect with:</span>
+    <!--<div id="socialButtonsContainer" fxLayout="row" fxLayout.xs="column" fxLayoutGap="16px" fxLayoutAlign="center">-->
+    <div id="socialButtonsContainer" fxLayout="row" fxLayoutGap="16px" fxLayoutAlign="center">
+      <!--<button md-raised-button id="googleSignInButton" (click)="signinGoogle()"><md-icon svgIcon="google-plus"></md-icon> Sign in with Google+</button>
     <button md-raised-button id="facebookSignInButton" (click)="signinFacebook()"><md-icon svgIcon="facebook"></md-icon> Sign in with Facebook</button>
     <button md-raised-button id="twitterSignInButton" (click)="signinTwitter()"><md-icon svgIcon="twitter"></md-icon> Sign in with Twitter</button>-->
-    <button md-icon-button id="googleSignInButton" [class.mat-elevation-z2]="true" (click)="signinGoogle()"><md-icon svgIcon="google-plus"></md-icon></button>
-    <button md-icon-button id="facebookSignInButton" [class.mat-elevation-z2]="true" (click)="signinFacebook()"><md-icon svgIcon="facebook"></md-icon></button>
-    <button md-icon-button id="twitterSignInButton" [class.mat-elevation-z2]="true" (click)="signinTwitter()"><md-icon svgIcon="twitter"></md-icon></button>
+      <button md-icon-button id="googleSignInButton" [class.mat-elevation-z2]="true" (click)="signinGoogle()"><md-icon svgIcon="google-plus"></md-icon></button>
+      <button md-icon-button id="facebookSignInButton" [class.mat-elevation-z2]="true" (click)="signinFacebook()"><md-icon svgIcon="facebook"></md-icon></button>
+      <button md-icon-button id="twitterSignInButton" [class.mat-elevation-z2]="true" (click)="signinTwitter()"><md-icon svgIcon="twitter"></md-icon></button>
+    </div>
   </div>
 </div>

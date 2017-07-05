@@ -1,3 +1,79 @@
-<p>
-  negotiations-table works!
-</p>
+<div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="16px">
+  <div id="tagsContainer" fxFlex="250px" fxFlex.xs="100%" fxLayout="column" fxLayoutGap="16px" fxFlexOrder.xs="2">
+    <div fxLayout="column" fxLayoutGap="8px">
+      <md-card>
+        <md-card-subtitle>Common Interests:</md-card-subtitle>
+        <md-card-content>
+          <div id="commonInterestsContainer">
+            <md-chip-list>
+              <md-chip class="chip-space" *ngFor="let ci of commonInterests">{{ci}}</md-chip>
+            </md-chip-list>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
+    <div fxLayout="column" fxLayoutGap="8px">
+      <md-card>
+        <md-card-subtitle>Emergent Themes:</md-card-subtitle>
+        <md-card-content>
+          <div fxLayout="column">
+            <md-input-container fxFlex>
+              <input mdInput #emergentThemeInput (keyup.enter)="addEmergentTheme(emergentThemeInput, emergentThemesContainer)" placeholder="New Emergent Theme...">
+            </md-input-container>
+            <div #emergentThemesContainer id="emergentThemesContainer">
+              <md-chip-list>
+                <md-chip class="chip-space" color="primary" selected="true" (click)="removeTag($event.target)" *ngFor="let et of emergentThemes">{{et}}</md-chip>
+              </md-chip-list>
+            </div>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
+  </div>
+  <div id="chatContainer" fxLayout="column" fxLayoutGap="8px" fxFlexOrder.xs="1">
+    <div fxLayout="row">
+      <button id="exitButton" md-raised-button (click)="exit()" fxFlex="88px" fxFlex.xs="100%" color="warn" title="Exit room">EXIT</button>
+    </div>
+    <div id="timerContainer" fxLayoutAlign="center">
+      <h3><span>09:43</span> remaining</h3>
+    </div>
+    <div id="messagesCardContainer" fxLayout="column" fxFlex>
+      <md-card fxFlex fxLayout="column">
+        <md-card-content fxFlex>
+          <div fxLayoutAlign="end" fxLayout="column" fxFlex>
+            <div id="messagesContainer">
+              <div class="messageContainer" fxLayout="row" fxLayoutGap="8px" *ngFor="let message of messages | async">
+                <div>
+                  <div class="pic" [style.background-image]="'url(' + message.photoUrl + ')'"></div>
+                </div>
+                <div fxLayout="column" fxLayoutGap="8px">
+                  <div class="message">
+                    <span *ngIf="message.text">{{ message.text }}</span>
+                    <img *ngIf="message.imageUrl" [src]="message.imageUrl">
+                  </div>
+                  <div class="name">{{ message.name }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </md-card-content>
+        <md-card-actions fxLayout fxLayoutAlign="start center">
+          <md-input-container fxFlex>
+            <input mdInput id="messageInput" [(ngModel)]="messageValue" placeholder="Message..." (keyup.enter)="saveMessage()">
+          </md-input-container>
+          <button md-raised-button id="sendButton" (click)="saveMessage()" color="accent" [disabled]="!messageValue">
+          SEND
+        </button>
+          <input id="mediaCapture" type="file" accept="image/*,capture=camera" (change)="saveImageMessage($event)">
+          <button md-raised-button id="submitImageButton" title="Add an image" (click)="onImageClick()">
+        <md-icon>image</md-icon>
+      </button>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </div>
+  <div id="dealContainer" fxLayout="column" fxLayoutAlign.gt-xs="end" fxLayoutGap="8px" fxFlexOrder.xs="3">
+    <button md-raised-button id="noDealButton" color="warn" (click)="noDeal()">NO DEAL</button>
+    <button md-raised-button id="dealButton" (click)="deal()">DEAL</button>
+  </div>
+</div>

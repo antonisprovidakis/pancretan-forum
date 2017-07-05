@@ -1,31 +1,33 @@
 <div fxLayout="column" fxLayoutAlign="start center">
-  <md-card>
-    <md-card-title>Partner profile</md-card-title>
-    <md-card-content id="formContainer">
-      <form fxLayout="column" [formGroup]="registrationForm">
-        <md-input-container>
-          <input mdInput placeholder="Name" formControlName="name">
-        </md-input-container>
-        <md-input-container>
-          <input mdInput placeholder="E-mail" formControlName="email">
-        </md-input-container>
-        <md-radio-group formControlName="role">
-          <label for="role">Partner Type: </label>
-          <md-radio-button name="role" value="hotelier">Hotelier</md-radio-button>
-          <md-radio-button name="role" value="producer">Producer</md-radio-button>
-        </md-radio-group>
-        <md-input-container>
-          <input mdInput placeholder="Company" formControlName="company">
-        </md-input-container>
-        <md-select placeholder="Interests" name="interests" formControlName="interests" multiple>
-          <md-option *ngFor="let interest of allInterests" [value]="interest">
-            {{interest | capital}}
-          </md-option>
-        </md-select>
-      </form>
-    </md-card-content>
-    <md-card-actions>
-      <button md-raised-button fxFlex color="accent" (click)="enterForum()">ENTER FORUM</button>
-    </md-card-actions>
-  </md-card>
+  <div id="container" fxLayout="column">
+    <md-card>
+      <md-card-title>Partner profile</md-card-title>
+      <md-card-content id="formContainer">
+        <form fxLayout="column" [formGroup]="registrationForm">
+          <md-input-container>
+            <input mdInput placeholder="Name" formControlName="name">
+          </md-input-container>
+          <md-input-container>
+            <input mdInput placeholder="E-mail" formControlName="email">
+          </md-input-container>
+          <md-radio-group formControlName="role">
+            <label for="role">Partner Type: </label>
+            <md-radio-button name="role" value="hotelier">Hotelier</md-radio-button>
+            <md-radio-button name="role" value="producer">Producer</md-radio-button>
+          </md-radio-group>
+          <md-input-container>
+            <input mdInput placeholder="Company" formControlName="company">
+          </md-input-container>
+          <md-select placeholder="Interests" name="interests" formControlName="interests" multiple>
+            <md-option *ngFor="let interest of allInterests" [value]="interest">
+              {{interest | capital}}
+            </md-option>
+          </md-select>
+        </form>
+      </md-card-content>
+      <md-card-actions>
+        <button md-raised-button fxFlex color="accent" (click)="enterForum()">ENTER FORUM</button>
+      </md-card-actions>
+    </md-card>
+  </div>
 </div>

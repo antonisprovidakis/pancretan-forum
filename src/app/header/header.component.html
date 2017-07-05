@@ -9,6 +9,7 @@
     <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated() && role">SCHEDULE</a>
     <a md-button routerLink="/people" *ngIf="authService.isAuthenticated() && role">PEOPLE</a>
     <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated() && role">CONTACT</a>
+    <a md-button routerLink="/negTable" *ngIf="authService.isAuthenticated() && role">NegTable</a>
   </div>
   <div id="user-container" *ngIf="authService.isAuthenticated()" fxLayout fxLayoutAlign="end center">
     <div id="user-pic" [ngStyle]="profilePicStyles"></div>

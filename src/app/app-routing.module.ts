@@ -40,6 +40,7 @@ const routes: Routes = [
   { path: 'schedule', component: ScheduleComponent },
   { path: 'people', component: PeopleComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'negTable', component: NegotiationsTableComponent },
   { path: '**', redirectTo: '/login' }
 ];
 

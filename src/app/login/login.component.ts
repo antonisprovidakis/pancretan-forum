@@ -5,9 +5,6 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
 
-import { DomSanitizer } from '@angular/platform-browser';
-import { MdIconRegistry } from '@angular/material';
-
 import { AuthenticationService } from '../shared/authentication.service';
 import { DatabaseApiService } from '../shared/database-api.service';
 
@@ -27,16 +24,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   constructor(
     public authService: AuthenticationService,
     public dbApi: DatabaseApiService,
-    private router: Router,
-    mdIconRegistry: MdIconRegistry,
-    sanitizer: DomSanitizer) {
-
-    mdIconRegistry
-      .addSvgIcon('google-plus', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/google-plus.svg'))
-      .addSvgIcon('facebook', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/facebook.svg'))
-      .addSvgIcon('twitter', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/social/twitter.svg'));
-    // .addSvgIcon('minotaur', sanitizer.bypassSecurityTrustResourceUrl('/assets/images/logo/minotaur.svg'));
-  }
+    private router: Router) { }
 
   ngOnInit() {
     this.authService.getCurrentUser().takeUntil(this.ngUnsubscribe).subscribe((authData) => {
