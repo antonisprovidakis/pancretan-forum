@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { MdSnackBar } from '@angular/material';
 
@@ -13,43 +13,48 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 
 import { AuthenticationService } from '../shared/authentication.service';
+import { DatabaseApiService } from '../shared/database-api.service';
 
 const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
-const PROFILE_PLACEHOLDER_IMAGE_URL = '/assets/images/profile_placeholder.png';
+
+const PENDING_MEETINGS_PATH = '/meetings/pending/';
 
 @Component({
   selector: 'app-negotiations-table',
   templateUrl: './negotiations-table.component.html',
   styleUrls: ['./negotiations-table.component.scss']
 })
-export class NegotiationsTableComponent implements OnInit {
-  // private ngUnsubscribe: Subject<void> = new Subject<void>();
+export class NegotiationsTableComponent implements OnInit, OnDestroy {
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
+
+  private MEETING_ID = 'kmVxL0UGK2e6xbs698FUvtQVHeR2_SoLmAgNiYuWLBt9pb395PVrPon72_1499439600000';
+  // MEETING_ID: string;
 
   messages: FirebaseListObservable<any>;
   messageValue = '';
 
-  commonInterests: string[] = ['abc', 'def', 'def'];
-  emergentThemes: string[] = ['123', '456', '789'];
+  commonInterests: FirebaseListObservable<string[]>;
+  emergentThemes: FirebaseListObservable<string[]>;
 
   constructor(
     public authService: AuthenticationService,
     public db: AngularFireDatabase,
+    private dbApi: DatabaseApiService,
     public afAuth: AngularFireAuth,
     public snackBar: MdSnackBar
   ) { }
 
   ngOnInit() {
-
     this.authService.getCurrentUser().subscribe((authData) => {
       if (authData) {
-        this.messages = this.db.list('/messages', {
+
+        this.messages = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/messages', {
           query: {
             limitToLast: 12
           }
         });
 
-        this.messages.subscribe((messages) => {
-          // Make sure new message scroll into view
+        this.messages.takeUntil(this.ngUnsubscribe).subscribe((messages) => {
           setTimeout(() => {
             const messageList = document.getElementById('messagesContainer');
             messageList.scrollTop = messageList.scrollHeight;
@@ -57,8 +62,23 @@ export class NegotiationsTableComponent implements OnInit {
           }, 500);
         });
 
+        this.commonInterests = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/common_interests');
+
+        this.emergentThemes = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/emergent_themes');
+        this.emergentThemes.takeUntil(this.ngUnsubscribe).subscribe((emergentThemes) => {
+          setTimeout(() => {
+            const emergentThemesContainer = document.getElementById('emergentThemesContainer');
+            emergentThemesContainer.scrollTop = emergentThemesContainer.scrollHeight;
+          }, 200);
+        });
+
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 
   exit() {
@@ -66,39 +86,44 @@ export class NegotiationsTableComponent implements OnInit {
 
   addEmergentTheme(input: HTMLInputElement, destContainer: HTMLDivElement): void {
     if (input.value && input.value.trim() !== '') {
-      // trim, replace space with underscore, convert to lowecase
+      // trim, replace space with underscore, convert to lowercase
       const tag = input.value.trim().replace(/\s+/g, '_').toLowerCase();
 
-      if (!this.emergentThemes.includes(tag)) {
-        this.emergentThemes.push(tag);
-        destContainer.scrollTop = destContainer.scrollHeight;
-        input.value = '';
-      } else {
-        this.snackBar.open('Tag already in list', null, {
-          duration: 2000
-        });
-      }
-    }
+      // make sure there is no duplicate
+      this.emergentThemes.map(data => {
+        const themesValues = [];
 
+        data.forEach(themeObject => {
+          themesValues.push(themeObject.$value);
+        });
+
+        return themesValues;
+      }).take(1).subscribe(emergentThemesValues => {
+        if (!emergentThemesValues.includes(tag)) {
+          this.emergentThemes.push(tag);
+          input.value = '';
+        } else {
+          this.snackBar.open('Tag already in list', null, {
+            duration: 2000
+          });
+        }
+      });
+    }
   }
 
-  removeTag(el): void {
-    const tag = el.innerHTML;
-    this.emergentThemes.splice(this.emergentThemes.indexOf(tag), 1);
+  removeTag(key: string): void {
+    this.emergentThemes.remove(key);
   }
 
   saveMessage() {
     if (this.messageValue && this.authService.isAuthenticated()) {
       // Add a new message entry to the Firebase Database.
-      const messages = this.db.list('/messages');
-      messages.push({
+      this.messages.push({
         name: this.authService.getDisplayName(),
         text: this.messageValue,
         photoUrl: this.authService.getPhotoURL()
       }).then(() => {
-        // Clear message text field and SEND button state.
         this.messageValue = '';
-        // el.value = '';
       }).catch((err) => {
         this.snackBar.open('Error writing new message to Firebase Database.', null, {
           duration: 5000
@@ -108,17 +133,9 @@ export class NegotiationsTableComponent implements OnInit {
     }
   }
 
-  // update(value: string) {
-  //   this.value = value;
-  // }
-
   saveImageMessage(event: any) {
     event.preventDefault();
     const file = event.target.files[0];
-
-    // Clear the selection in the file picker input.
-    // const imageForm = <HTMLFormElement>document.getElementById('image-form');
-    // imageForm.reset();
 
     event.target.value = '';
 
@@ -130,18 +147,16 @@ export class NegotiationsTableComponent implements OnInit {
       return;
     }
 
-    // Check if the user is signed-in
     if (this.authService.isAuthenticated()) {
 
       // We add a message with a loading icon that will get updated with the shared image.
-      const messages = this.db.list('/messages');
-      messages.push({
+      this.messages.push({
         name: this.authService.getDisplayName(),
         imageUrl: LOADING_IMAGE_URL,
         photoUrl: this.authService.getPhotoURL()
       }).then((data) => {
         // Upload the image to Cloud Storage.
-        const filePath = `${this.authService.getUID()}/${data.key}/${file.name}`;
+        const filePath = `${this.MEETING_ID}/${this.authService.getUID()}/${data.key}/${file.name}`;
         return firebase.storage().ref(filePath).put(file)
           .then((snapshot) => {
             // Get the file's Storage URI and update the chat message placeholder.
@@ -167,8 +182,7 @@ export class NegotiationsTableComponent implements OnInit {
 
   // TODO: Refactor into image message form component
   onImageClick() {
-    // event.preventDefault();
-    document.getElementById('mediaCapture').click();
+    document.getElementById('imageInput').click();
   }
 
   deal() {

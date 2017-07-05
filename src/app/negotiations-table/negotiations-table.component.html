@@ -6,7 +6,7 @@
         <md-card-content>
           <div id="commonInterestsContainer">
             <md-chip-list>
-              <md-chip class="chip-space" *ngFor="let ci of commonInterests">{{ci}}</md-chip>
+              <md-chip class="chip-space" *ngFor="let ci of commonInterests | async">{{ci.$value}}</md-chip>
             </md-chip-list>
           </div>
         </md-card-content>
@@ -22,7 +22,7 @@
             </md-input-container>
             <div #emergentThemesContainer id="emergentThemesContainer">
               <md-chip-list>
-                <md-chip class="chip-space" color="primary" selected="true" (click)="removeTag($event.target)" *ngFor="let et of emergentThemes">{{et}}</md-chip>
+                <md-chip class="chip-space" color="primary" selected="true" (click)="removeTag(et.$key)" *ngFor="let et of emergentThemes| async">{{et.$value}}</md-chip>
               </md-chip-list>
             </div>
           </div>
@@ -64,7 +64,7 @@
           <button md-raised-button id="sendButton" (click)="saveMessage()" color="accent" [disabled]="!messageValue">
           SEND
         </button>
-          <input id="mediaCapture" type="file" accept="image/*,capture=camera" (change)="saveImageMessage($event)">
+          <input id="imageInput" type="file" accept="image/*, application/pdf" (change)="saveImageMessage($event)">
           <button md-raised-button id="submitImageButton" title="Add an image" (click)="onImageClick()">
         <md-icon>image</md-icon>
       </button>
