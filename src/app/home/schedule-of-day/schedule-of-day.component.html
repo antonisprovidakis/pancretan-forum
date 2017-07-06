@@ -4,12 +4,14 @@
     <hr>
   </div>
   <div id="meetingsContainer">
-    <div *ngFor="let meeting of meetings">
+    <div class="meeting" *ngFor="let meeting of meetings">
       <div class="today-schedule-content-text">
-        <span>{{meeting.time}}</span>
-        <span *ngIf="displayAttendButton(meeting.time)" class="attend-btn" (click)="attendMeeting()">attend</span><br>
+        <div class="btnContainer">
+          <span *ngIf="displayAttendButton(meeting.timestamp)" class="attend-btn" (click)="attendMeeting(meeting.$key)">Attend</span><br>
+        </div>
+        <div class="time">{{ meeting.timestamp | date:'medium' }}</div>
       </div>
-      <span>{{meeting.meetingWith}}</span>
+      <div class="name">{{displayOther(meeting)}}</div>
       <hr>
     </div>
   </div>

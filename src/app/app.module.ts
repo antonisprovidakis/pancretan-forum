@@ -114,7 +114,10 @@ import { ForumStatusComponent } from './forum-status/forum-status.component';
     MdMenuModule,
     MdSnackBarModule
   ],
-  entryComponents: [ProductCommentsDialogComponent],
+  entryComponents: [
+    ProductCommentsDialogComponent,
+    NegotiationsTableComponent
+    ],
   providers: [
     AuthenticationService,
     AppGuard,

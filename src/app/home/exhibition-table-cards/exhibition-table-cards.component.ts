@@ -29,7 +29,7 @@ export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
 
       this.tables.push(
         {
-          producerName: 'Mamra farrsd',
+          producerName: 'Gargan farrsd',
           descr: 'Some descra15dsa4d5',
           image: 'garg-farm.png',
           popularity: 6

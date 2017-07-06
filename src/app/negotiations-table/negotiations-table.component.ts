@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
+import { MdDialog, MD_DIALOG_DATA } from '@angular/material';
 
 import { MdSnackBar } from '@angular/material';
 
@@ -6,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
-
 
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -27,8 +27,8 @@ const PENDING_MEETINGS_PATH = '/meetings/pending/';
 export class NegotiationsTableComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private MEETING_ID = 'kmVxL0UGK2e6xbs698FUvtQVHeR2_SoLmAgNiYuWLBt9pb395PVrPon72_1499439600000';
-  // MEETING_ID: string;
+  // private MEETING_ID = 'kmVxL0UGK2e6xbs698FUvtQVHeR2_SoLmAgNiYuWLBt9pb395PVrPon72_1499439600000';
+  MEETING_ID: string;
 
   messages: FirebaseListObservable<any>;
   messageValue = '';
@@ -37,12 +37,16 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
   emergentThemes: FirebaseListObservable<string[]>;
 
   constructor(
+    @Inject(MD_DIALOG_DATA) public data: any,
     public authService: AuthenticationService,
     public db: AngularFireDatabase,
     private dbApi: DatabaseApiService,
     public afAuth: AngularFireAuth,
-    public snackBar: MdSnackBar
-  ) { }
+    public snackBar: MdSnackBar,
+    public dialog: MdDialog
+) {
+    this.MEETING_ID = data.meetingID;
+  }
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe((authData) => {
@@ -82,6 +86,7 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
   }
 
   exit() {
+    this.dialog.closeAll();
   }
 
   addEmergentTheme(input: HTMLInputElement, destContainer: HTMLDivElement): void {
@@ -89,7 +94,7 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
       // trim, replace space with underscore, convert to lowercase
       const tag = input.value.trim().replace(/\s+/g, '_').toLowerCase();
 
-      // make sure there is no duplicate
+      // make sure there are no duplicates
       this.emergentThemes.map(data => {
         const themesValues = [];
 
@@ -156,7 +161,7 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
         photoUrl: this.authService.getPhotoURL()
       }).then((data) => {
         // Upload the image to Cloud Storage.
-        const filePath = `${this.MEETING_ID}/${this.authService.getUID()}/${data.key}/${file.name}`;
+        const filePath = `meetings/${this.MEETING_ID}/${this.authService.getUID()}/${data.key}/${file.name}`;
         return firebase.storage().ref(filePath).put(file)
           .then((snapshot) => {
             // Get the file's Storage URI and update the chat message placeholder.
@@ -186,8 +191,10 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
   }
 
   deal() {
+    // TODO: implement
   }
 
   noDeal() {
+    // TODO: implement
   }
 }

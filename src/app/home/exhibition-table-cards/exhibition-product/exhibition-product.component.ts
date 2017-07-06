@@ -1,5 +1,5 @@
 import { Component, Input, Inject, OnInit } from '@angular/core';
-import { MdDialog, MD_DIALOG_DATA } from '@angular/material';
+import { MdDialog } from '@angular/material';
 
 import { Comment } from './comment.interface';
 import { ProductCommentsDialogComponent } from './product-comments-dialog/product-comments-dialog.component';
@@ -12,24 +12,11 @@ import { ProductCommentsDialogComponent } from './product-comments-dialog/produc
 export class ExhibitionProductComponent implements OnInit {
   @Input() liked = false;
   // TODO: should "liked" be an Output also?
-  @Input() popularity = 0;
-  @Input() image = '/assets/images/feta.jpg';
-  @Input() title = 'Feta';
-  @Input() descr = 'Best feta in the world';
-  @Input() comments: Comment[] = [
-    {
-      'user': 'SoLmAgNiYuWLBt9pb395PVrPon72',
-      'content': 'Guys, this is really good.'
-    },
-    {
-      'user': 'kmVxL0UGK2e6xbs698FUvtQVHeR2',
-      'content': 'Should I buy?'
-    },
-    {
-      'user': 'SoLmAgNiYuWLBt9pb395PVrPon72',
-      'content': 'Absolutely, yes!'
-    }
-  ];
+  @Input() popularity;
+  @Input() image;
+  @Input() title;
+  @Input() descr;
+  @Input() comments: Comment[];
 
   private dialogConfig = {
     disableClose: false,

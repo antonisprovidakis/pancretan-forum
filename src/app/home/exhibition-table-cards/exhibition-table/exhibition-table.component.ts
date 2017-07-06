@@ -12,7 +12,7 @@ export class ExhibitionTableComponent implements OnInit {
   @Input() producerID = 'uid';
   producerBrandName = 'Producer brand name goes here';
 
-  products: Product[] = [];
+  products: Product[];
 
   constructor() { }
 
@@ -49,7 +49,8 @@ export class ExhibitionTableComponent implements OnInit {
     //       title: product.title,
     //       descr: product.descr,
     //       popularity: product.popularity,
-    //       comments: product.comments
+    //       comments: product.comments,
+    //       image: product.image
     //     }
     //   );
     // });

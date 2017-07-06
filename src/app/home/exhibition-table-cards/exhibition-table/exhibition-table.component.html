@@ -2,7 +2,7 @@
   <h1 fxFlexAlign="center">{{producerBrandName}}</h1>
   <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
     <app-exhibition-product fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let product of products"
-      [descr]="product.descr" [popularity]="product.popularity" [title]="product.title" [comments]="product.comments">
+      [descr]="product.descr" [popularity]="product.popularity" [title]="product.title" [image]="product.image" [comments]="product.comments">
     </app-exhibition-product>
   </div>
 </div>

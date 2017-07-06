@@ -5,4 +5,5 @@ export interface Product {
   descr: string;
   popularity: number;
   comments: Comment[];
+  image: string;
 }
