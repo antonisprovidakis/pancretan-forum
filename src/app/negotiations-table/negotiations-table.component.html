@@ -32,7 +32,16 @@
   </div>
   <div id="chatContainer" fxLayout="column" fxLayoutGap="8px" fxFlexOrder.xs="1">
     <div fxLayout="row">
-      <button id="exitButton" md-raised-button (click)="exit()" fxFlex="88px" fxFlex.xs="100%" color="warn" title="Exit room">EXIT</button>
+      <button id="exitButton" md-raised-button (click)="exit()" fxFlex="88px" fxFlex.xs="100%" color="accent" title="Exit room">EXIT</button>
+      <div *ngIf="hotelier && hotelier.online || producer && producer.online" fxFlex id="onlinePresenceButtonsContainer" fxLayoutAlign="end"
+        fxLayoutGap="8px">
+        <span fxFlexAlign="center">Online Users:</span>
+        <!--<div class="user-pic" [ngStyle]="{'background-image': 'url(' + user.photo + ')'}"  mdTooltip="{{'user.name'}} is Online" mdTooltipPosition="below" *ngFor="let user of []"></div>-->
+        <div *ngIf="hotelier.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + hotelier.photoURL + ')'}" mdTooltip="{{hotelier.company}} is Online"
+          mdTooltipPosition="below"></div>
+        <div *ngIf="producer.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + producer.photoURL + ')'}" mdTooltip="{{producer.company}} is Online"
+          mdTooltipPosition="below"></div>
+      </div>
     </div>
     <div id="timerContainer" fxLayoutAlign="center">
       <h3><span>09:43</span> remaining</h3>
@@ -54,18 +63,19 @@
                   <div class="name">{{ message.name }}</div>
                 </div>
               </div>
+              <span *ngIf="getOppositeRoleObject(role) && getOppositeRoleObject(role).typing" id="userTypingSpan">{{getOppositeRoleObject(role).company}} is typing...</span>
             </div>
           </div>
         </md-card-content>
         <md-card-actions fxLayout fxLayoutAlign="start center">
           <md-input-container fxFlex>
-            <input mdInput id="messageInput" [(ngModel)]="messageValue" placeholder="Message..." (keyup.enter)="saveMessage()">
+            <input mdInput id="messageInput" [(ngModel)]="messageValue" placeholder="Message..." (input)="setUserTyping()" (keyup.enter)="saveMessage()">
           </md-input-container>
           <button md-raised-button id="sendButton" (click)="saveMessage()" color="accent" [disabled]="!messageValue">
           SEND
         </button>
           <input id="imageInput" type="file" accept="image/*, application/pdf" (change)="saveImageMessage($event)">
-          <button md-raised-button id="submitImageButton" title="Add an image" (click)="onImageClick()">
+          <button md-raised-button id="submitImageButton" title="Upload an image" (click)="onImageClick()">
         <md-icon>image</md-icon>
       </button>
         </md-card-actions>
@@ -73,7 +83,8 @@
     </div>
   </div>
   <div id="dealContainer" fxLayout="column" fxLayoutAlign.gt-xs="end" fxLayoutGap="8px" fxFlexOrder.xs="3">
-    <button md-raised-button id="noDealButton" color="warn" (click)="noDeal()">NO DEAL</button>
-    <button md-raised-button id="dealButton" (click)="deal()">DEAL</button>
+    <md-checkbox indeterminate="true" (change)="onCheckDeal($event)">Deal?</md-checkbox>
+    <!--<button md-raised-button id="noDealButton" color="warn" (click)="noDeal()">NO DEAL</button>
+    <button md-raised-button id="dealButton" (click)="deal()">DEAL</button>-->
   </div>
 </div>

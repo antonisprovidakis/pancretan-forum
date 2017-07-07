@@ -12,7 +12,7 @@ export class ExhibitionTableComponent implements OnInit {
   @Input() producerID = 'uid';
   producerBrandName = 'Producer brand name goes here';
 
-  products: Product[];
+  products: Product[] = [];
 
   constructor() { }
 
@@ -24,19 +24,29 @@ export class ExhibitionTableComponent implements OnInit {
     //     title: 'a title',
     //     descr: 'a description',
     //     popularity: 23,
-    //     comments: []
+    //     comments: [],
+    //     image: '/assets/images/feta.jpg'
     //   },
     //   {
     //     title: 'a title',
     //     descr: 'a description',
     //     popularity: 23,
-    //     comments: []
+    //     comments: [],
+    //     image: '/assets/images/graviera.jpg'
     //   },
     //   {
     //     title: 'a title',
     //     descr: 'a description',
     //     popularity: 23,
-    //     comments: []
+    //     comments: [],
+    //     image: '/assets/images/feta.jpg'
+    //   },
+    //   {
+    //     title: 'a title',
+    //     descr: 'a description',
+    //     popularity: 23,
+    //     comments: [],
+    //     image: '/assets/images/graviera.jpg'
     //   }
     // ];
 

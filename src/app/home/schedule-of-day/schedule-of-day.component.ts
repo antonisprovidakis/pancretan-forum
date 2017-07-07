@@ -12,7 +12,7 @@ import { DatabaseApiService } from '../../shared/database-api.service';
 
 import { NegotiationsTableComponent } from '../../negotiations-table/negotiations-table.component';
 
-const PENDING_MEETINGS_PATH = '/meetings/pending';
+const MEETINGS_PATH = '/meetings';
 
 @Component({
   selector: 'app-schedule-of-day',
@@ -40,7 +40,8 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
       right: ''
     },
     data: {
-      meetingID: ''
+      meetingID: '',
+      role: ''
     }
   };
 
@@ -60,16 +61,29 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
           if (role) {
             this.role = role;
 
-            this.db.list(PENDING_MEETINGS_PATH).takeUntil(this.ngUnsubscribe).subscribe(meetings => {
+            this.db.list(MEETINGS_PATH, {
+              query: {
+                orderByChild: 'completed',
+                equalTo: false
+              }
+            }).takeUntil(this.ngUnsubscribe).subscribe((meetings: any[]) => {
               const meetingsToDisplay = [];
               const now = Date.now();
 
-              meetings.forEach(m => {
+              meetings.forEach(meeting => {
                 // 86400000 ms = 1 day
                 // if (m.timestamp <= now + 86400000 && m[role].uid === this.authService.getUID()) {
-                if (m[role].uid === this.authService.getUID()) {
-                  meetingsToDisplay.push(m);
+
+                // if (m[role].uid === this.authService.getUID() && m[role].deal === undefined) {
+                // if (meeting[role].uid === this.authService.getUID() && meeting.deal === undefined) {
+                if (meeting[role].uid === this.authService.getUID()) {
+                  meetingsToDisplay.push(meeting);
                 }
+              });
+
+              // ascending order sorting
+              meetingsToDisplay.sort((a, b) => {
+                return a.timestamp - b.timestamp;
               });
 
               this.meetings = meetingsToDisplay;
@@ -91,7 +105,8 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
 
   attendMeeting(meetingId) {
     this.dialogConfig.data = {
-      meetingID: meetingId
+      meetingID: meetingId,
+      role: this.role
     }
 
     this.dialog.open(NegotiationsTableComponent, this.dialogConfig);

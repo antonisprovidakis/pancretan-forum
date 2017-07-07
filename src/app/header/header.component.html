@@ -11,7 +11,8 @@
     <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated() && role">CONTACT</a>
   </div>
   <div id="user-container" *ngIf="authService.isAuthenticated()" fxLayout fxLayoutAlign="end center">
-    <div id="user-pic" [ngStyle]="profilePicStyles"></div>
+    <div id="user-pic" [ngStyle]="{'background-image': 'url(' + this.authService.getPhotoURL() + ')'}"></div>
+
     <span id="user-name">{{ authService.getDisplayName() }}</span>
     <button md-button (click)="signout()">
       LOG OUT

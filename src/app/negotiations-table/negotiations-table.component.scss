@@ -67,9 +67,27 @@
 }
 
 #dealButton {
-  background-color: #1cdb2e;
+  background-color: #2bd83c;
   color: white;
 }
 .chip-space {
    margin-bottom: 8px !important;
+}
+
+.user-pic {
+  // top: -3px;
+  // position: relative;
+  // display: inline-block;
+  background-image: url('/assets/images/profile_placeholder.png');
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  background-size: 40px;
+  border-radius: 20px;
+}
+
+#userTypingSpan {
+  font-size: 12px;
+  font-style: italic;
+  color: #bbb;
 }

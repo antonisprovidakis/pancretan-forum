@@ -16,7 +16,6 @@ import { DatabaseApiService } from '../shared/database-api.service';
 export class HeaderComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  profilePicStyles: {};
   role = null;
 
   constructor(public authService: AuthenticationService, public dbApi: DatabaseApiService, private router: Router) { }
@@ -24,9 +23,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authService.getCurrentUser().takeUntil(this.ngUnsubscribe).subscribe((authData) => {
       if (authData) {
-        this.profilePicStyles = {
-          'background-image': `url(${this.authService.getPhotoURL()})`
-        };
         this.dbApi.getUserRole().take(1).subscribe(role => this.role = role);
       }
     });

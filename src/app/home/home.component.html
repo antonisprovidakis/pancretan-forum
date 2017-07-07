@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutGap="16px">
-  <div fxLayout="column" fxFlex="128px">
+  <div id="interestsContainer" fxLayout="column" fxFlex="128px">
     <app-interests class="sticky" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
   </div>
   <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3', 'uid3']"></app-exhibition-table-cards>

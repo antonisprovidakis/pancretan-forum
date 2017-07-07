@@ -29,9 +29,9 @@ export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
 
       this.tables.push(
         {
-          producerName: 'Gargan farrsd',
+          producerName: 'Gargan farm',
           descr: 'Some descra15dsa4d5',
-          image: 'garg-farm.png',
+          image: '/assets/images/garg-farm.png',
           popularity: 6
         }
       );

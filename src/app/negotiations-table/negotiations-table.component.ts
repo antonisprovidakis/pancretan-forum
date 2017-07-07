@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
 
@@ -17,7 +17,7 @@ import { DatabaseApiService } from '../shared/database-api.service';
 
 const LOADING_IMAGE_URL = 'https://www.google.com/images/spin-32.gif';
 
-const PENDING_MEETINGS_PATH = '/meetings/pending/';
+const MEETINGS_PATH = '/meetings';
 
 @Component({
   selector: 'app-negotiations-table',
@@ -29,12 +29,25 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
   // private MEETING_ID = 'kmVxL0UGK2e6xbs698FUvtQVHeR2_SoLmAgNiYuWLBt9pb395PVrPon72_1499439600000';
   MEETING_ID: string;
+  role: string;
+  private userTypingTimer: any;
 
   messages: FirebaseListObservable<any>;
   messageValue = '';
 
   commonInterests: FirebaseListObservable<string[]>;
   emergentThemes: FirebaseListObservable<string[]>;
+
+  hotelier: any;
+  producer: any;
+
+  private myRoleRef: FirebaseObjectObservable<any>;
+  private oppositeRoleObject: any;
+
+  private hotelierRef: FirebaseObjectObservable<any>;
+  private producerRef: FirebaseObjectObservable<any>;
+
+  dealt: boolean;
 
   constructor(
     @Inject(MD_DIALOG_DATA) public data: any,
@@ -44,15 +57,35 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     public afAuth: AngularFireAuth,
     public snackBar: MdSnackBar,
     public dialog: MdDialog
-) {
+  ) {
     this.MEETING_ID = data.meetingID;
+    this.role = data.role;
+  }
+
+  onCheckDeal(dealEvent) {
+    this.dealt = dealEvent.checked;
+    console.log(this.dealt);
   }
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe((authData) => {
       if (authData) {
+        this.hotelierRef = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID + '/' + 'hotelier');
 
-        this.messages = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/messages', {
+        this.hotelierRef.subscribe(hotelier => {
+          this.hotelier = hotelier;
+        });
+
+        this.producerRef = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID + '/' + 'producer');
+        this.producerRef.subscribe(producer => {
+          this.producer = producer;
+        });
+
+        this.myRoleRef = this.getAppropriateRoleRef(this.role);
+
+        this.goOnline();
+
+        this.messages = this.db.list(MEETINGS_PATH + '/' + this.MEETING_ID + '/messages', {
           query: {
             limitToLast: 12
           }
@@ -66,9 +99,9 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
           }, 500);
         });
 
-        this.commonInterests = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/common_interests');
+        this.commonInterests = this.db.list(MEETINGS_PATH + '/' + this.MEETING_ID + '/common_interests');
 
-        this.emergentThemes = this.db.list(PENDING_MEETINGS_PATH + '/' + this.MEETING_ID + '/emergent_themes');
+        this.emergentThemes = this.db.list(MEETINGS_PATH + '/' + this.MEETING_ID + '/emergent_themes');
         this.emergentThemes.takeUntil(this.ngUnsubscribe).subscribe((emergentThemes) => {
           setTimeout(() => {
             const emergentThemesContainer = document.getElementById('emergentThemesContainer');
@@ -85,8 +118,67 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
+  private getAppropriateRoleRef(role: string) {
+    return role === 'hotelier' ? this.hotelierRef : this.producerRef;
+  }
+
+  private getOppositeRoleObject(role: string) {
+    return role === 'hotelier' ? this.producer : this.hotelier;
+  }
+
+  private goOnline() {
+    return this.myRoleRef.update({ online: true });
+  }
+
+  private goOffline() {
+    return this.myRoleRef.update({ online: false });
+  }
+
   exit() {
+    if (this.dealt !== undefined) {
+
+      this.myRoleRef.update({ deal: this.dealt }).then(() => {
+        const myVote = this.dealt;
+        const otherVote = this.getOppositeRoleObject(this.role).deal;
+
+        if (myVote !== undefined && otherVote !== undefined) {
+          const meetingDeal = myVote && otherVote ? true : false;
+          this.updateMeetingDealValue(meetingDeal);
+          this.updateMeetingCompletedValue(true);
+        }
+      });
+    }
+
+    this.goOffline()
     this.dialog.closeAll();
+  }
+
+  private updateMeetingCompletedValue(completed) {
+    const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
+    pendingMeeting.update({ completed: completed });
+  }
+
+  private updateMeetingDealValue(deal: boolean) {
+    const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
+    pendingMeeting.update({ deal: deal });
+  }
+
+  deal() {
+    this.dealt = true;
+  }
+
+  noDeal() {
+    this.dealt = false;
+  }
+
+  setUserTyping() {
+    this.myRoleRef.update({ typing: true });
+
+    if (this.userTypingTimer) {
+      clearTimeout(this.userTypingTimer);
+    }
+
+    this.userTypingTimer = setTimeout(() => this.myRoleRef.update({ typing: false }), 2000);
   }
 
   addEmergentTheme(input: HTMLInputElement, destContainer: HTMLDivElement): void {
@@ -190,11 +282,4 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     document.getElementById('imageInput').click();
   }
 
-  deal() {
-    // TODO: implement
-  }
-
-  noDeal() {
-    // TODO: implement
-  }
 }
