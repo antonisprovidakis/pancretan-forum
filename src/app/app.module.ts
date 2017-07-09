@@ -4,6 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+import { TagCloudModule } from 'angular-tag-cloud-module';
+
+import { ChartsModule } from 'ng2-charts';
+
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
@@ -114,7 +118,9 @@ import { ForumStatusComponent } from './forum-status/forum-status.component';
     MdProgressSpinnerModule,
     MdMenuModule,
     MdSnackBarModule,
-    MdTooltipModule
+    MdTooltipModule,
+    TagCloudModule,
+    ChartsModule
   ],
   entryComponents: [
     ProductCommentsDialogComponent,
