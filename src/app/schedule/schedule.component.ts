@@ -84,6 +84,7 @@ export class ScheduleComponent implements OnInit {
       max: new Date(2017, 6, 23, 21, 0),
       // groupOrder: 'content',
       orientation: 'top',
+      zoomMin: 5400000,
       editable: {
         add: true,         // add new items by double tapping
         // updateTime: true,  // drag items horizontally
