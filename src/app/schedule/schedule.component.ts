@@ -15,13 +15,18 @@ export class ScheduleComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.timeline = this.initTimeline();
+    this.timeline = this.createTimeline();
   }
 
-  private initTimeline() {
+  private createData() {
+
+  }
+
+  private createTimeline() {
     const container = document.getElementById('visualization');
 
-    const now = Vis.moment().minutes(0).seconds(0).milliseconds(0);
+    // const now = Vis.moment().minutes(0).seconds(0).milliseconds(0);
+    const now = 1500620400000;
     const groupCount = 3;
     const itemCount = 20;
 
@@ -32,41 +37,43 @@ export class ScheduleComponent implements OnInit {
     }
 
     // create a dataset with items
-    // const items = new Vis.DataSet();
-    // for (let i = 0; i < 10; i++) {
-    //   const start = now.clone().add(Math.random() * 200, 'hours');
-    //   const group = Math.floor(Math.random() * groupCount);
-    //   items.add({
-    //     id: i,
-    //     group: group,
-    //     content: 'item ' + i,
-    //     // + ' <span style="color:#97B0F8;">(' + names[group] + ')</span>',
-    //     start: start,
-    //     type: 'box'
-    //   });
-    // }
+    const items = new Vis.DataSet();
+    for (let i = 0; i < itemCount; i++) {
+      // const start = now.clone().add(Math.random() * 200, 'hours');
+      const start = new Date(now + 600000 * i);
+      const end = new Date(now + (600000 * i + 600000));
+      const group = Math.floor(Math.random() * groupCount);
+      items.add({
+        id: i,
+        group: group,
+        content: 'item ' + i,
+        // + ' <span style="color:#97B0F8;">(' + names[group] + ')</span>',
+        start: start,
+        end: end
+      });
+    }
 
-    const myspan: HTMLSpanElement = document.createElement('span');
-    myspan.innerText = 'Producer 1';
+    // const myspan: HTMLSpanElement = document.createElement('span');
+    // myspan.innerText = 'Producer 1';
 
     // Create a DataSet (allows two way data-binding)
-    const items = new Vis.DataSet([
-      {
-        id: 1, content: myspan,
-        start: new Date(1500620400000), end: new Date(1500620400000 + 600000), group: 0
-      }
-      // { id: 2, content: 'item 2', start: '2013-04-17', group: 1, type: 'box' },
-      // { id: 3, content: 'item 3', start: '2013-04-18', group: 1, type: 'box' },
-      // { id: 4, content: 'item 4', start: '2013-04-19', group: 2, type: 'box' }
-    ]);
+    // const items = new Vis.DataSet([
+    //   {
+    //     id: 1, content: myspan,
+    //     start: new Date(1500620400000), end: new Date(1500620400000 + 600000), group: 0
+    //   }
+    //   // { id: 2, content: 'item 2', start: '2013-04-17', group: 1, type: 'box' },
+    //   // { id: 3, content: 'item 3', start: '2013-04-18', group: 1, type: 'box' },
+    //   // { id: 4, content: 'item 4', start: '2013-04-19', group: 2, type: 'box' }
+    // ]);
 
-    items.on('add', function (event, properties, senderId) {
-      console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
-    });
+    // items.on('add', function (event, properties, senderId) {
+    //   console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
+    // });
 
-    items.on('remove', function (event, properties, senderId) {
-      console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
-    });
+    // items.on('remove', function (event, properties, senderId) {
+    //   console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
+    // });
 
     const options = {
       type: 'range',
@@ -90,7 +97,12 @@ export class ScheduleComponent implements OnInit {
       onAdd: (item, callback) => {
         // item.content = prompt('Edit items text:', item.content);
         item.end.setTime(item.start.getTime() + 600000); // meeting is always 10 minutes
-        items.add(item);
+
+        if (item.content != null) {
+          callback(item);
+        } else {
+          callback(null);
+        }
       }
     };
 
