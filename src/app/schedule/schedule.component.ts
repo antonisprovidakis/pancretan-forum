@@ -40,7 +40,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       if (authData) {
         this.dbApi.getUserRole().take(1).subscribe(
           role => {
-            this.role = role
+            // this.role = role;
+            this.role = 'producer';
 
             // this.db.list(MEETINGS_PATH, {
             //   query: {
@@ -48,18 +49,19 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             //     equalTo: false
             //   }
             // })
-            this.db.list(MEETINGS_PATH).takeUntil(this.ngUnsubscribe).subscribe((meetingsFB: any[]) => {
+            this.db.list(MEETINGS_PATH).takeUntil(this.ngUnsubscribe)
+              .subscribe((meetingsFB: any[]) => {
 
-              const tempRole = 'hotelier';
+                const tempRole = this.role;
 
-              const filteredMeetingsFB = this.filterMeetingsFB(tempRole, meetingsFB);
+                const filteredMeetingsFB = this.filterMeetingsFB(tempRole, meetingsFB);
 
-              // if (this.timeline) {
-              //   this.updateTimelineData(tempRole);
-              // }
+                // if (this.timeline) {
+                //   this.updateTimelineData(tempRole, filteredMeetingsFB);
+                // }
 
-              this.timeline = this.createTimeline(tempRole, filteredMeetingsFB);
-            });
+                this.timeline = this.createTimeline(tempRole, filteredMeetingsFB);
+              });
 
           });
       }
@@ -73,7 +75,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
 
   private filterMeetingsFB(role: string, meetingsFB: any[]) {
-    if (role === 'chamber') {
+    if (role === 'chamber' || role === 'producer') {
       return meetingsFB; // return all meetings
     }
 
@@ -87,14 +89,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       });
     }
 
-    if (role === 'producer') {
-      meetingsFB.forEach(meetingFB => {
-        // if (meetingFB.producer.uid === this.authService.getUID()) {
-        if (meetingFB.producer.uid === 'SoLmAgNiYuWLBt9pb395PVrPon72') {
-          filteredMeetingsFB.push(meetingFB); // get all meetings in which the producer is the current user
-        }
-      });
-    }
+    // if (role === 'producer') {
+    //   meetingsFB.forEach(meetingFB => {
+    //     // if (meetingFB.producer.uid === this.authService.getUID()) {
+    //     if (meetingFB.producer.uid === 'SoLmAgNiYuWLBt9pb395PVrPon72') {
+    //       filteredMeetingsFB.push(meetingFB); // get all meetings in which the producer is the current user
+    //     }
+    //   });
+    // }
 
     return filteredMeetingsFB;
   }
@@ -105,26 +107,22 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private createGroups(role: string, meetingsFB?: any[]) {
 
+    if (role === 'hotelier') {
+      return null;
+    }
+
     const hoteliersIdAndName = [];
 
-    if (role === 'hotelier') {
-      const hotelier = {
-        uid: this.authService.getUID(),
-        name: 'The Hotelier'
-      };
-      hoteliersIdAndName.push(hotelier);
-    } else {
-      meetingsFB.forEach(meetingFB => {
-        if (!this.duplicateInHoteliersIdAndName(hoteliersIdAndName, meetingFB)) {
-          const hotelier = {
-            uid: meetingFB.hotelier.uid,
-            name: meetingFB.hotelier.company
-          };
+    meetingsFB.forEach(meetingFB => {
+      if (!this.duplicateInHoteliersIdAndName(hoteliersIdAndName, meetingFB)) {
+        const hotelier = {
+          uid: meetingFB.hotelier.uid,
+          name: meetingFB.hotelier.company
+        };
 
-          hoteliersIdAndName.push(hotelier);
-        }
-      });
-    }
+        hoteliersIdAndName.push(hotelier);
+      }
+    });
 
     const groups = new Vis.DataSet();
 
@@ -135,46 +133,76 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return groups;
   }
 
-  private createEvents(role: string, meetingsFB?: any[]) {
-    // for (let i = 0; i < itemCount; i++) {
-    //   // const start = now.clone().add(Math.random() * 200, 'hours');
-    //   const start = new Date(now + 600000 * i);
-    //   const end = new Date(now + (600000 * i + 600000));
-    //   // const group = Math.floor(Math.random() * 0);
-    //   meetings.add({
-    //     id: i,
-    //     // group: group,
-    //     content: 'item ' + i,
-    //     // + ' <span style="color:#97B0F8;">(' + names[group] + ')</span>',
-    //     start: start,
-    //     end: end
-    //   });
-    // }
+  private createMeetings(role: string, meetingsFB?: any[]) {
 
     const meetings = new Vis.DataSet();
 
     meetingsFB.forEach(meeting => {
       const timestampToInt = parseInt(meeting.timestamp, 10);
-
       const start = new Date(timestampToInt);
       const end = new Date(timestampToInt + 600000);
       const id = meeting.$key;
-      const groupId = role === 'hotelier' ? this.authService.getUID() : meeting.hotelier.uid;
 
-      meetings.add({
+      let label = '<b><span>' + meeting.producer.company + '</span></b><br>' +
+        '<span>Common Interests: ' + meeting.common_interests + '</span>';
+
+      if (meeting.emergent_themes) {
+        label = label + '<br><span>Emergent Themes: ' + meeting.emergent_themes + '</span>';
+      }
+
+      const meetingObj = {
         id: id,
-        group: groupId,
-        content: 'item ' + id,
+        // content: label,
         // + ' <span style="color:#97B0F8;">(' + names[group] + ')</span>',
         start: start,
         end: end,
-        title: 'item ' + id // tooltip
-      });
+        // title: label // tooltip
+      };
 
+      if (role !== 'hotelier') {
+        meetingObj['group'] = meeting.hotelier.uid;
+      }
+
+      console.log(meeting.producer.uid);
+      console.log(this.authService.getUID());
+
+
+      if (role === 'producer') {
+
+        if (meeting.producer.uid !== 'SoLmAgNiYuWLBt9pb395PVrPon72') {
+          label = '<span>Occupied</span>';
+
+          if (meeting.completed === true) {
+            meetingObj['className'] = 'occupiedCompleted'
+            label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
+          } else {
+            meetingObj['className'] = 'occupiedPending'
+            label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
+          }
+        } else {
+          if (meeting.completed === true) {
+            meetingObj['className'] = 'completed'
+            label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
+          } else {
+            meetingObj['className'] = 'pending'
+            label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
+          }
+
+          const editable = {
+            add: true,
+            remove: true
+          };
+
+          meetingObj['editable'] = editable;
+        }
+
+        meetingObj['content'] = label;
+        meetingObj['title'] = label;
+
+      }
+
+      meetings.add(meetingObj);
     });
-
-    // const myspan: HTMLSpanElement = document.createElement('span');
-    // myspan.innerText = 'Producer 1';
 
     // meetings.on('add', function (event, properties, senderId) {
     //   console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
@@ -199,16 +227,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       // groupOrder: 'content',
       orientation: 'top',
       zoomMin: 6500000, // 7200000 => 2 hours
-      editable: {
-        add: true,         // add new items by double tapping
-        // updateTime: true,  // drag items horizontally
-        remove: true       // delete an item by tapping the delete button top right
-      },
       snap: (date: any, scale: string, step: number) => {
         // always snap to full 10-minutes, independent of the scale
         return Math.round(date / MINUTE_10) * MINUTE_10;
       },
       onAdd: (item, callback) => {
+        // console.log(item.group); // find hotelier by group
+
         // item.content = prompt('Edit items text:', item.content);
         item.end.setTime(item.start.getTime() + 600000); // meeting is always 10 minutes
 
@@ -220,20 +245,38 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       }
     };
 
+    // if (role === 'producer') {
+    //   const editable = {
+    //     add: true,
+    //     remove: true
+    //   };
+
+    //   options['editable'] = editable;
+    // }
+
     return options;
   }
 
   private updateTimelineData(role: string, meetingsFB?: any[]) {
+
+    const groups = this.createGroups(role, meetingsFB);
+    const meetings = this.createMeetings(role, meetingsFB);
+
+    this.timeline.setData({
+      groups: groups,
+      items: meetings
+    });
+
   }
 
   private createTimeline(role: string, meetingsFB?: any[]) {
     const container = document.getElementById('visualization');
 
     const groups = this.createGroups(role, meetingsFB);
-    console.log('groups: ', groups.getIds());
+    // console.log('groups: ', groups.getIds());
 
-    const meetings = this.createEvents(role, meetingsFB);
-    console.log('meetings: ', meetings);
+    const meetings = this.createMeetings(role, meetingsFB);
+    // console.log('meetings: ', meetings);
 
     const options = this.createTimelineOptions(role, meetingsFB);
 

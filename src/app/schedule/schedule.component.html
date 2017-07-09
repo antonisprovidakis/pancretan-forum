@@ -1,8 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="center center">
   <div id="container" fxLayout="column" fxLayoutGap="16px">
     <md-card>
-      <md-card-title>My Schedule</md-card-title>
-      <!--<md-card-subtitle>Common Interests:</md-card-subtitle>-->
+      <!--<md-card-header>-->
+        <md-card-title *ngIf="role==='hotelier'">My Schedule</md-card-title>
+        <md-card-title *ngIf="role==='producer'">My Schedule</md-card-title>
+        <md-card-title *ngIf="role==='chamber'">Arranged Meetings</md-card-title>
+      <!--</md-card-header>-->
       <md-card-content>
         <!--<div id="commonInterestsContainer">
             <md-chip-list>

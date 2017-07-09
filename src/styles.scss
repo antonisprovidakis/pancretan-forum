@@ -39,3 +39,38 @@ md-icon{
   /*g+*/
   background-color: #eeeeee;
 }
+
+
+
+/* vis-related custom classes go here */
+.vis-item{
+
+
+  &.occupiedCompleted {
+    color: white;
+    background-color: #605959;
+    border-color: #13d834;
+    border-width: 3px;
+  }
+
+    &.occupiedPending {
+    color: white;
+    background-color: #605959;
+    border-color: #e8ad0d;
+    border-width: 3px;
+  }
+
+  &.completed {
+    color: white;
+    border-color: #13d834;
+    border-width: 3px;
+  }
+
+    &.pending {
+    color: white;
+    border-color: #e8ad0d;
+    border-width: 3px;
+  }
+
+
+}
