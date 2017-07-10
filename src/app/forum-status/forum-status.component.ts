@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-
+import { Observable } from 'rxjs/Rx';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/take';
 
 import * as Vis from 'vis';
 
-const MEETINGS_PATH = '/meetings';
-const USERS_PATH = '/users';
+import { DatabaseApiService } from '../shared/database-api.service';
+
 
 @Component({
   selector: 'app-forum-status',
@@ -41,20 +41,11 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
     { from: 1, to: 2 },
     { from: 1, to: 3 }
   ];
-  private idCounter: number = 3;
-  private producers: any[] = [];
-  private hoteliers: any[] = [];
 
-  constructor(public db: AngularFireDatabase) { }
+  constructor(private dbApi: DatabaseApiService) { }
 
   ngOnInit() {
-
-    this.db.list(MEETINGS_PATH, {
-      query: {
-        orderByChild: 'state',
-        equalTo: 'completed'
-      }
-    })
+    this.dbApi.getCompletedMeetings()
       .takeUntil(this.ngUnsubscribe).subscribe(meetings => {
 
         for (let meeting of meetings) {
@@ -68,72 +59,74 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
             this.noDeals++;
           }
         }
-        this.doughnutChartData = [this.noDeals, this.deals];
 
+        this.doughnutChartData = [this.noDeals, this.deals];
         this.data = this.data.concat(this.emergentThemesList);
         this.data = this.data.concat(this.commonInterestsList);
       });
 
-    this.db.list(USERS_PATH).takeUntil(this.ngUnsubscribe)
-      .subscribe(users => {
+    Observable.forkJoin(
+      this.dbApi.getHoteliers().take(1),
+      this.dbApi.getProducers().take(1)
+    ).subscribe(data => {
+      const hoteliers = data[0];
+      const producers = data[1];
+      const hoteliersNodes = [];
+      const producersNodes = [];
 
-        console.log('users', users);
-
-        for (let user of users) {
-          this.idCounter++;
-
-          if (user.role === 'producer') {
-            this.producers.push({
-              id: this.idCounter,
-              shape: 'circularImage',
-              image: user.photoURL,
-              label: user.name
-            });
-          } else if (user.role === 'hotelier') {
-            this.hoteliers.push({
-              id: this.idCounter,
-              shape: 'circularImage',
-              image: user.photoURL,
-              label: user.name
-            });
-          }
-        }
-
-        this.nodes = this.nodes.concat(this.producers);
-        this.nodes = this.nodes.concat(this.hoteliers);
-
-        this.edges = this.edges.concat(
-          this.setupEdges(this.producers, this.hoteliers));
-
-        const container = document.getElementById('usersContainer');
-
-        const data = {
-          nodes: this.nodes,
-          edges: this.edges
-        };
-
-        const options = {
-          autoResize: true,
-          // height: '100%',
-          // width: '100%',
-          nodes: {
-            borderWidth: 2,
-            size: 30,
-            color: {
-              border: '#152d52',
-              background: '#fff'
-            },
-            font: { size: 18, color: '#000' }
-          },
-          edges: {
-            color: 'lightgray'
-          },
-          phisics:{stabilization:{ fit: true}}
-        };
-
-        let network = new Vis.Network(container, data, options);
-        // network.fit();
+      hoteliers.forEach(hotelier => {
+        hoteliersNodes.push({
+          id: hotelier.$key,
+          shape: 'circularImage',
+          image: hotelier.repr_hotel.logo,
+          label: hotelier.repr_hotel.name
+        });
       });
+
+      producers.forEach(producer => {
+        producersNodes.push({
+          id: producer.$key,
+          shape: 'circularImage',
+          image: producer.company.logo,
+          label: producer.company.name
+        });
+      });
+      this.nodes = this.nodes.concat(producersNodes);
+      this.nodes = this.nodes.concat(hoteliersNodes);
+
+      this.edges = this.edges.concat(
+        this.setupEdges(producersNodes, hoteliersNodes));
+
+      const container = document.getElementById('usersContainer');
+
+      const netData = {
+        nodes: this.nodes,
+        edges: this.edges
+      };
+
+      const options = {
+        autoResize: true,
+        // height: '100%',
+        // width: '100%',
+        nodes: {
+          borderWidth: 2,
+          size: 30,
+          color: {
+            border: '#152d52',
+            background: '#fff'
+          },
+          font: { size: 18, color: '#000' }
+        },
+        edges: {
+          color: 'lightgray',
+          length: 150,
+          width: 2
+        }
+      };
+
+      let network = new Vis.Network(container, netData, options);
+    });
+
   }
 
   ngOnDestroy(): void {
@@ -154,9 +147,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
           weight: 3
         });
       }
-
     }
-
   }
 
   private setupEmergentThemesData(emergentThemes) {
