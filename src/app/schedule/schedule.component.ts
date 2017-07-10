@@ -163,10 +163,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         meetingObj['group'] = meeting.hotelier.uid;
       }
 
-      console.log(meeting.producer.uid);
-      console.log(this.authService.getUID());
-
-
       if (role === 'producer') {
 
         if (meeting.producer.uid !== 'SoLmAgNiYuWLBt9pb395PVrPon72') {
@@ -188,17 +184,18 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
           }
 
-          const editable = {
-            add: true,
-            remove: true
-          };
+          if (meeting.timestamp >= Date.now()) {
+            const editable = {
+              remove: true
+            };
 
-          meetingObj['editable'] = editable;
+            meetingObj['editable'] = editable;
+          }
+
         }
 
         meetingObj['content'] = label;
         meetingObj['title'] = label;
-
       }
 
       meetings.add(meetingObj);
@@ -232,6 +229,9 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return Math.round(date / MINUTE_10) * MINUTE_10;
       },
       onAdd: (item, callback) => {
+        console.log('item: ', item);
+
+
         // console.log(item.group); // find hotelier by group
 
         // item.content = prompt('Edit items text:', item.content);
@@ -245,14 +245,13 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       }
     };
 
-    // if (role === 'producer') {
-    //   const editable = {
-    //     add: true,
-    //     remove: true
-    //   };
+    if (role === 'producer') {
+      const editable = {
+        add: true
+      };
 
-    //   options['editable'] = editable;
-    // }
+      options['editable'] = editable;
+    }
 
     return options;
   }
