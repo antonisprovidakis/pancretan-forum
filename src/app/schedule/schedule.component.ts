@@ -316,11 +316,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       },
       onRemove: (item, callback) => {
         this.onRemoveMeeting(item);
-      },
-      onUpdate: (item, callback) => {
-        console.log(item);
-        console.log(callback);
-        // this.onAcceptMeeting(item, callback);
       }
     };
 
@@ -354,16 +349,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   }
 
   private onRemoveMeeting(meeting) {
-    console.log(meeting);
-    const meetingId = meeting.id;
-    this.dbApi.removeMeeting(meetingId);
+    this.dbApi.removeMeeting(meeting.id);
   }
 
   private onAddMeeting(newMeeting) {
-    console.log('newMeeting: ', newMeeting);
-
     if (!this.canAddMeeting(newMeeting, this.meetings)) {
-      // callback(null);
       this.snackBar.open('Meeting timeslot is already occupied!', null, {
         duration: 5000
       });
@@ -407,9 +397,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           producer: p,
           timestamp: timestamp
         }
-        console.log('before');
         this.dbApi.createMeeting(meetingId, meetingData);
-        console.log('after');
       });
     });
 
@@ -430,7 +418,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   private createTimeline(role: string, hoteliers: any[], meetingsFB?: any[]) {
     const container = document.getElementById('visualization');
 
-    // this.groups = this.createGroups(role, meetingsFB);
     this.groups = this.createGroups(role, hoteliers);
     // if (this.groups) {
     //   console.log('groups: ', this.groups.getIds());
@@ -444,8 +431,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     const timeline = new Vis.Timeline(container, this.meetings, this.groups, options);
 
     timeline.on('contextmenu', props => {
-      console.log('contMenu: ', props);
-
       this.clickedMeeting = this.meetings.get(props.item);
 
       this.tempNewMeetingData = {
@@ -456,7 +441,6 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         end: new Date(props.snappedTime + MINUTE_10)
       }
 
-      // this.onRemoveMeeting(this.meetings.get(props.item));
       props.event.preventDefault();
     });
     return timeline;
