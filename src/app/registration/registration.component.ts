@@ -11,7 +11,7 @@ import { DatabaseApiService } from '../shared/database-api.service';
 
 interface RegistrationDetails {
   role: string;
-  company: string;
+  company: any;
   interests?: string[];
 }
 
@@ -95,7 +95,9 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   private createHotelierProfile(data: RegistrationDetails) {
-    const repr_hotel = data.company;
+    const repr_hotel = {
+      name: data.company
+    };
     const interests = data.interests;
 
     this.dbApi.createHotelierProfile(repr_hotel, interests);
@@ -103,10 +105,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   private createProducerProfile(data: RegistrationDetails) {
-    const prod_name = data.company;
+    const company = {
+      name: data.company
+    };
     const interests = data.interests;
 
-    this.dbApi.createProducerProfile(prod_name, interests);
+    this.dbApi.createProducerProfile(company, interests);
     console.log('save ProducerProfile');
   }
 

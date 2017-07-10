@@ -31,7 +31,7 @@ export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
         {
           producerName: 'Gargan farm',
           descr: 'Some descra15dsa4d5',
-          image: '/assets/images/garg-farm.png',
+          logo: '/assets/images/garg-farm.png',
           popularity: 6
         }
       );

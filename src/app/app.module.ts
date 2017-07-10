@@ -39,6 +39,9 @@ import {
 
 import 'hammerjs';
 
+import { ContextMenuModule } from 'ngx-contextmenu/lib';
+
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -120,12 +123,13 @@ import { ForumStatusComponent } from './forum-status/forum-status.component';
     MdSnackBarModule,
     MdTooltipModule,
     TagCloudModule,
-    ChartsModule
+    ChartsModule,
+    ContextMenuModule
   ],
   entryComponents: [
     ProductCommentsDialogComponent,
     NegotiationsTableComponent
-    ],
+  ],
   providers: [
     AuthenticationService,
     AppGuard,
