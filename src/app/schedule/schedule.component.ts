@@ -283,20 +283,21 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   private createOptions(role: string, meetingsFB?: any[]) {
     const minDate = new Date(2017, 6, 7, 9, 0);
-    const maxDate = new Date(2017, 6, 26, 21, 0);
+    const maxDate = new Date(2017, 6, 23, 21, 0);
 
 
+    // schedule is open from 08:00 to 21:00
     const hiddenDateStart = new Date(minDate);
     hiddenDateStart.setHours(21);
     hiddenDateStart.setMinutes(0);
 
-    const hiddenDateEnd = new Date(minDate);
+    const hiddenDateEnd = new Date(maxDate);
     hiddenDateEnd.setHours(8);
     hiddenDateEnd.setMinutes(0);
 
     const options = {
       hiddenDates: [
-        { start: hiddenDateStart, end: hiddenDateEnd, repeat: 'daily' } // daily weekly monthly yearly
+        { start: hiddenDateStart, end: hiddenDateEnd, repeat: 'daily' }
       ],
       type: 'range',
       // timeAxis: {scale: 'minute', step: 10},
@@ -313,10 +314,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       },
       onAdd: (item, callback) => {
         this.onAddMeeting(item);
-      },
-      onRemove: (item, callback) => {
-        this.onRemoveMeeting(item);
       }
+      // ,
+      // onRemove: (item, callback) => {
+      //   this.onRemoveMeeting(item);
+      // }
     };
 
     if (role === 'producer') {
@@ -443,6 +445,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
       props.event.preventDefault();
     });
+
     return timeline;
   }
 
