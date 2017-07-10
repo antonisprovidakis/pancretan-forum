@@ -61,7 +61,7 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
           if (role) {
             this.role = role;
 
-            this.dbApi.getCompletedMeetings().takeUntil(this.ngUnsubscribe).subscribe((meetings: any[]) => {
+            this.dbApi.getPendingMeetings().takeUntil(this.ngUnsubscribe).subscribe((meetings: any[]) => {
               const meetingsToDisplay = [];
               const now = Date.now();
 

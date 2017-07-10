@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 
 import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
 
@@ -9,6 +9,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
+
+import { ContextMenuComponent } from 'ngx-contextmenu';
 
 import { AuthenticationService } from '../shared/authentication.service';
 import { DatabaseApiService } from '../shared/database-api.service';
@@ -26,6 +28,8 @@ const MINUTE_10 = 600000;
   styleUrls: ['./schedule.component.scss']
 })
 export class ScheduleComponent implements OnInit, OnDestroy {
+  @ViewChild(ContextMenuComponent) public contextMenu: ContextMenuComponent;
+
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   role: string;
@@ -34,12 +38,93 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   meetings: Vis.DataSet;
   groups: Vis.DataSet;
 
+  clickedMeeting: any = null;
+  private tempNewMeetingData: any = null;
+
+  public contextMenuActions: any[];
+
   constructor(
     public authService: AuthenticationService,
     public db: AngularFireDatabase,
     private dbApi: DatabaseApiService,
     public snackBar: MdSnackBar,
   ) { }
+
+  private createContextMenuItems(role: string) {
+    let menuItems = null;
+
+    if (role === 'hotelier') {
+      menuItems = [
+        {
+          html: () => `Accept meeting proposal`,
+          click: (meeting) => this.dbApi.updateMeetingState(meeting.id, 'pending'),
+          visible: (meeting) => meeting.state === 'interim'
+        },
+        {
+          html: () => `Reject meeting proposal`,
+          click: (meeting) => this.onRemoveMeeting(meeting),
+          visible: (meeting) => meeting.state === 'interim'
+        },
+        {
+          html: () => `Cancel meeting`,
+          click: (meeting) => this.onRemoveMeeting(meeting),
+          visible: (meeting) => meeting.state === 'pending'
+        }
+      ];
+    } else if (role === 'producer') {
+      menuItems = [
+        {
+          html: () => `Propose meeting`,
+          click: (meeting) => {
+            this.onAddMeeting(this.tempNewMeetingData);
+            this.tempNewMeetingData = null;
+          },
+          visible: (meeting) => Array.isArray(meeting)
+        },
+        {
+          html: () => `Withdraw meeting proposal`,
+          click: (meeting) => this.onRemoveMeeting(meeting),
+          visible: (meeting) => {
+            return meeting.producerUID === this.authService.getUID() && meeting.state === 'interim'
+          }
+        },
+        {
+          html: () => `Cancel meeting`,
+          click: (meeting) => this.onRemoveMeeting(meeting),
+          visible: (meeting) => {
+            return meeting.producerUID === this.authService.getUID() && meeting.state === 'pending'
+          }
+        }
+      ];
+    }
+
+    return menuItems;
+  }
+
+  shouldHideMenu(role, clickedMeeting) {
+    if (role && clickedMeeting) {
+
+      if (clickedMeeting.state === 'completed') {
+        return true;
+      } else {
+        if (role === 'hotelier') {
+
+          if (Array.isArray(clickedMeeting)) {
+            return true;
+          }
+
+        } else if (role === 'producer') {
+
+          if (!Array.isArray(clickedMeeting) && clickedMeeting.producerUID !== this.authService.getUID()) {
+            return true;
+          }
+
+        }
+      }
+    }
+
+    return false;
+  }
 
   ngOnInit() {
     this.authService.getCurrentUser().subscribe((authData) => {
@@ -48,6 +133,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
           role => {
             this.role = role;
             // this.role = 'producer';
+
+            this.contextMenuActions = this.createContextMenuItems(this.role);
 
             this.dbApi.getHoteliers().takeUntil(this.ngUnsubscribe).subscribe(hoteliers => {
 
@@ -131,14 +218,15 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     meetingsFB.forEach(meeting => {
       const timestampToInt = parseInt(meeting.timestamp, 10);
       const start = new Date(timestampToInt);
-      const end = new Date(timestampToInt + 600000);
+      const end = new Date(timestampToInt + MINUTE_10);
       const id = meeting.$key;
 
       const meetingObj = {
         id: id,
         start: start,
         end: end,
-        state: meeting.state // custom property
+        state: meeting.state, // custom property
+        producerUID: meeting.producer.uid
       };
 
       let label = '<b><span>' + meeting.producer.company_name + '</span></b><br>' +
@@ -160,7 +248,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
       } else {
         meetingObj['className'] = 'interim'
-        label = label + '<br><span>State: <span style="background-color: #176aef;">Interim</span></span>';
+        label = label + '<br><span>State: <span style="background-color: #176aef;">Proposed</span></span>';
       }
 
       if (role === 'producer') {
@@ -175,27 +263,20 @@ export class ScheduleComponent implements OnInit, OnDestroy {
             meetingObj['className'] = 'occupiedOnterim'
           }
 
-        } else {
-          if (meeting.timestamp >= Date.now()) {
-            meetingObj['editable'] = {
-              remove: true
-            };
-          }
         }
+        //         else {
+        // //   // if (meeting.timestamp >= Date.now()) {
+        //     meetingObj['editable'] = {
+        //       remove: true
+        //     };
+        // //   }
+        // }
       }
 
       meetingObj['content'] = meetingObj['title'] = label;
 
       meetings.add(meetingObj);
     });
-
-    // meetings.on('add', function (event, properties, senderId) {
-    //   console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
-    // });
-
-    // meetings.on('remove', function (event, properties, senderId) {
-    //   console.log('event:', event, 'properties:', properties, 'senderId:', senderId);
-    // });
 
     return meetings;
   }
@@ -231,10 +312,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return Math.round(date / MINUTE_10) * MINUTE_10;
       },
       onAdd: (item, callback) => {
-        this.onAddMeeting(item, callback);
+        this.onAddMeeting(item);
       },
       onRemove: (item, callback) => {
-        this.onRemoveMeeting(item, callback);
+        this.onRemoveMeeting(item);
       },
       onUpdate: (item, callback) => {
         console.log(item);
@@ -272,15 +353,17 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return meetingsWithSameStartDate.length === 0;
   }
 
-  private onRemoveMeeting(meeting, callback?) {
+  private onRemoveMeeting(meeting) {
     console.log(meeting);
     const meetingId = meeting.id;
     this.dbApi.removeMeeting(meetingId);
   }
 
-  private onAddMeeting(newMeeting, callback) {
+  private onAddMeeting(newMeeting) {
+    console.log('newMeeting: ', newMeeting);
+
     if (!this.canAddMeeting(newMeeting, this.meetings)) {
-      callback(null);
+      // callback(null);
       this.snackBar.open('Meeting timeslot is already occupied!', null, {
         duration: 5000
       });
@@ -329,6 +412,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         console.log('after');
       });
     });
+
   }
 
   private updateTimelineData(role: string, hoteliers: any[], meetingsFB?: any[]) {
@@ -359,16 +443,22 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     const timeline = new Vis.Timeline(container, this.meetings, this.groups, options);
 
-    // timeline.on('contextmenu', props => {
-    //   // if interim state, show menu to accept/reject
+    timeline.on('contextmenu', props => {
+      console.log('contMenu: ', props);
 
-    //   // console.log('Right click!');
-    //   // console.log(props);
-    //   // this.onRemoveMeeting(this.meetings.get(props.item));
+      this.clickedMeeting = this.meetings.get(props.item);
 
-    //   // console.log(this.meetings.get(props.item).state);
-    //   props.event.preventDefault();
-    // });
+      this.tempNewMeetingData = {
+        id: 'temp-id',
+        content: 'temp-content',
+        group: props.group,
+        start: new Date(props.snappedTime),
+        end: new Date(props.snappedTime + MINUTE_10)
+      }
+
+      // this.onRemoveMeeting(this.meetings.get(props.item));
+      props.event.preventDefault();
+    });
     return timeline;
   }
 
