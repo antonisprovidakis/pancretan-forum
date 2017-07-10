@@ -1,6 +1,6 @@
 export interface ExhibitionTableData {
   producerName: string;
   descr: string;
-  image: string;
+  logo: string;
   popularity: number;
 }

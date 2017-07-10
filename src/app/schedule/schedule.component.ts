@@ -2,6 +2,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { AngularFireDatabase, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2/database';
 
+import { MdSnackBar } from '@angular/material';
+
+
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/take';
@@ -12,7 +15,7 @@ import { DatabaseApiService } from '../shared/database-api.service';
 
 import * as Vis from 'vis';
 
-const MEETINGS_PATH = '/meetings';
+// const MEETINGS_PATH = '/meetings';
 
 const MINUTE_10 = 600000;
 
@@ -28,11 +31,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   role: string;
 
   timeline: any;
+  meetings: Vis.DataSet;
+  groups: Vis.DataSet;
 
   constructor(
     public authService: AuthenticationService,
     public db: AngularFireDatabase,
-    private dbApi: DatabaseApiService
+    private dbApi: DatabaseApiService,
+    public snackBar: MdSnackBar,
   ) { }
 
   ngOnInit() {
@@ -40,29 +46,23 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       if (authData) {
         this.dbApi.getUserRole().take(1).subscribe(
           role => {
-            // this.role = role;
-            this.role = 'producer';
+            this.role = role;
+            // this.role = 'producer';
 
-            // this.db.list(MEETINGS_PATH, {
-            //   query: {
-            //     orderByChild: 'completed',
-            //     equalTo: false
-            //   }
-            // })
-            this.db.list(MEETINGS_PATH).takeUntil(this.ngUnsubscribe)
-              .subscribe((meetingsFB: any[]) => {
+            this.dbApi.getHoteliers().takeUntil(this.ngUnsubscribe).subscribe(hoteliers => {
 
-                const tempRole = this.role;
+              this.dbApi.getAllMeetings().takeUntil(this.ngUnsubscribe).subscribe((meetingsFB: any[]) => {
 
-                const filteredMeetingsFB = this.filterMeetingsFB(tempRole, meetingsFB);
+                const filteredMeetingsFB = this.filterMeetingsFB(this.role, meetingsFB);
 
-                // if (this.timeline) {
-                //   this.updateTimelineData(tempRole, filteredMeetingsFB);
-                // }
+                if (this.timeline) {
+                  this.updateTimelineData(this.role, hoteliers, filteredMeetingsFB);
+                  return;
+                }
 
-                this.timeline = this.createTimeline(tempRole, filteredMeetingsFB);
+                this.timeline = this.createTimeline(this.role, hoteliers, filteredMeetingsFB);
               });
-
+            });
           });
       }
     });
@@ -89,23 +89,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       });
     }
 
-    // if (role === 'producer') {
-    //   meetingsFB.forEach(meetingFB => {
-    //     // if (meetingFB.producer.uid === this.authService.getUID()) {
-    //     if (meetingFB.producer.uid === 'SoLmAgNiYuWLBt9pb395PVrPon72') {
-    //       filteredMeetingsFB.push(meetingFB); // get all meetings in which the producer is the current user
-    //     }
-    //   });
-    // }
-
     return filteredMeetingsFB;
   }
 
   private duplicateInHoteliersIdAndName(array: any[], value) {
-    return array.some(arrVal => value.hotelier.uid === arrVal.uid);
+    return array.some(arrVal => value.$key === arrVal.uid);
   }
 
-  private createGroups(role: string, meetingsFB?: any[]) {
+  private createGroups(role: string, hoteliers: any[]) {
 
     if (role === 'hotelier') {
       return null;
@@ -113,14 +104,14 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     const hoteliersIdAndName = [];
 
-    meetingsFB.forEach(meetingFB => {
-      if (!this.duplicateInHoteliersIdAndName(hoteliersIdAndName, meetingFB)) {
-        const hotelier = {
-          uid: meetingFB.hotelier.uid,
-          name: meetingFB.hotelier.company
+    hoteliers.forEach(hotelier => {
+      if (!this.duplicateInHoteliersIdAndName(hoteliersIdAndName, hotelier)) {
+        const h = {
+          uid: hotelier.$key,
+          name: hotelier.repr_hotel.name
         };
 
-        hoteliersIdAndName.push(hotelier);
+        hoteliersIdAndName.push(h);
       }
     });
 
@@ -143,60 +134,57 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       const end = new Date(timestampToInt + 600000);
       const id = meeting.$key;
 
-      let label = '<b><span>' + meeting.producer.company + '</span></b><br>' +
+      const meetingObj = {
+        id: id,
+        start: start,
+        end: end,
+        state: meeting.state // custom property
+      };
+
+      let label = '<b><span>' + meeting.producer.company_name + '</span></b><br>' +
         '<span>Common Interests: ' + meeting.common_interests + '</span>';
 
       if (meeting.emergent_themes) {
         label = label + '<br><span>Emergent Themes: ' + meeting.emergent_themes + '</span>';
       }
 
-      const meetingObj = {
-        id: id,
-        // content: label,
-        // + ' <span style="color:#97B0F8;">(' + names[group] + ')</span>',
-        start: start,
-        end: end,
-        // title: label // tooltip
-      };
-
       if (role !== 'hotelier') {
         meetingObj['group'] = meeting.hotelier.uid;
       }
 
-      if (role === 'producer') {
+      if (meeting.state === 'completed') {
+        meetingObj['className'] = 'completed'
+        label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
+      } else if (meeting.state === 'pending') {
+        meetingObj['className'] = 'pending'
+        label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
+      } else {
+        meetingObj['className'] = 'interim'
+        label = label + '<br><span>State: <span style="background-color: #176aef;">Interim</span></span>';
+      }
 
-        if (meeting.producer.uid !== 'SoLmAgNiYuWLBt9pb395PVrPon72') {
+      if (role === 'producer') {
+        if (meeting.producer.uid !== this.authService.getUID()) {
           label = '<span>Occupied</span>';
 
-          if (meeting.completed === true) {
+          if (meeting.state === 'completed') {
             meetingObj['className'] = 'occupiedCompleted'
-            label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
-          } else {
+          } else if (meeting.state === 'pending') {
             meetingObj['className'] = 'occupiedPending'
-            label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
-          }
-        } else {
-          if (meeting.completed === true) {
-            meetingObj['className'] = 'completed'
-            label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
           } else {
-            meetingObj['className'] = 'pending'
-            label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
+            meetingObj['className'] = 'occupiedOnterim'
           }
 
+        } else {
           if (meeting.timestamp >= Date.now()) {
-            const editable = {
+            meetingObj['editable'] = {
               remove: true
             };
-
-            meetingObj['editable'] = editable;
           }
-
         }
-
-        meetingObj['content'] = label;
-        meetingObj['title'] = label;
       }
+
+      meetingObj['content'] = meetingObj['title'] = label;
 
       meetings.add(meetingObj);
     });
@@ -212,15 +200,29 @@ export class ScheduleComponent implements OnInit, OnDestroy {
     return meetings;
   }
 
-  private createTimelineOptions(role: string, meetingsFB?: any[]) {
+  private createOptions(role: string, meetingsFB?: any[]) {
+    const minDate = new Date(2017, 6, 7, 9, 0);
+    const maxDate = new Date(2017, 6, 26, 21, 0);
+
+
+    const hiddenDateStart = new Date(minDate);
+    hiddenDateStart.setHours(21);
+    hiddenDateStart.setMinutes(0);
+
+    const hiddenDateEnd = new Date(minDate);
+    hiddenDateEnd.setHours(8);
+    hiddenDateEnd.setMinutes(0);
 
     const options = {
+      hiddenDates: [
+        { start: hiddenDateStart, end: hiddenDateEnd, repeat: 'daily' } // daily weekly monthly yearly
+      ],
       type: 'range',
       // timeAxis: {scale: 'minute', step: 10},
       // start: new Date(2017, 6, 20, 9, 0),
-      min: new Date(2017, 6, 7, 9, 0),
+      min: minDate,
       // end: new Date(2017, 6, 23, 21, 0),
-      max: new Date(2017, 6, 26, 21, 0),
+      max: maxDate,
       // groupOrder: 'content',
       orientation: 'top',
       zoomMin: 6500000, // 7200000 => 2 hours
@@ -229,58 +231,144 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         return Math.round(date / MINUTE_10) * MINUTE_10;
       },
       onAdd: (item, callback) => {
-        console.log('item: ', item);
-
-
-        // console.log(item.group); // find hotelier by group
-
-        // item.content = prompt('Edit items text:', item.content);
-        item.end.setTime(item.start.getTime() + 600000); // meeting is always 10 minutes
-
-        if (item.content != null) {
-          callback(item);
-        } else {
-          callback(null);
-        }
+        this.onAddMeeting(item, callback);
+      },
+      onRemove: (item, callback) => {
+        this.onRemoveMeeting(item, callback);
+      },
+      onUpdate: (item, callback) => {
+        console.log(item);
+        console.log(callback);
+        // this.onAcceptMeeting(item, callback);
       }
     };
 
     if (role === 'producer') {
-      const editable = {
+      options['editable'] = {
         add: true
       };
-
-      options['editable'] = editable;
     }
 
     return options;
   }
 
-  private updateTimelineData(role: string, meetingsFB?: any[]) {
+  private findCommonInterests(hotelierInterests, producerInterests) {
+    const ret = [];
+    for (const i in hotelierInterests) {
+      if (producerInterests.indexOf(hotelierInterests[i]) > -1) {
+        ret.push(hotelierInterests[i]);
+      }
+    }
+    return ret;
+  }
 
-    const groups = this.createGroups(role, meetingsFB);
-    const meetings = this.createMeetings(role, meetingsFB);
+  private canAddMeeting(newMeeting, meetings) {
+    const meetingsWithSameStartDate: any[] = this.meetings.get({
+      filter: function (itemToFind) {
+        return (itemToFind.start.getTime() === newMeeting.start.getTime());
+      }
+    });
+
+    return meetingsWithSameStartDate.length === 0;
+  }
+
+  private onRemoveMeeting(meeting, callback?) {
+    console.log(meeting);
+    const meetingId = meeting.id;
+    this.dbApi.removeMeeting(meetingId);
+  }
+
+  private onAddMeeting(newMeeting, callback) {
+    if (!this.canAddMeeting(newMeeting, this.meetings)) {
+      callback(null);
+      this.snackBar.open('Meeting timeslot is already occupied!', null, {
+        duration: 5000
+      });
+      return;
+    }
+
+    this.dbApi.getHotelier(newMeeting.group).subscribe(hotelier => {
+      const hotelierInterests = hotelier.interests;
+
+      this.dbApi.getProducer(this.authService.getUID()).subscribe(producer => {
+        const producerInterests = producer.interests;
+
+        const meetingId = newMeeting.group + '_' + this.authService.getUID() + '_' + newMeeting.start.getTime();
+        const commonInterests = this.findCommonInterests(hotelierInterests, producerInterests);
+        const timestamp = newMeeting.start.getTime();
+
+        const h = {
+          company_name: hotelier.repr_hotel.name,
+          logo: hotelier.repr_hotel.logo,
+          name: hotelier.name,
+          online: false,
+          photoURL: hotelier.photoURL,
+          typing: false,
+          uid: hotelier.$key
+        };
+
+        const p = {
+          company_name: producer.company.name,
+          logo: producer.company.logo,
+          name: producer.name,
+          online: false,
+          photoURL: producer.photoURL,
+          typing: false,
+          uid: producer.$key
+        };
+
+        const meetingData = {
+          common_interests: commonInterests,
+          state: 'interim',
+          hotelier: h,
+          producer: p,
+          timestamp: timestamp
+        }
+        console.log('before');
+        this.dbApi.createMeeting(meetingId, meetingData);
+        console.log('after');
+      });
+    });
+  }
+
+  private updateTimelineData(role: string, hoteliers: any[], meetingsFB?: any[]) {
+
+    this.groups = this.createGroups(role, hoteliers);
+    this.meetings = this.createMeetings(role, meetingsFB);
 
     this.timeline.setData({
-      groups: groups,
-      items: meetings
+      groups: this.groups,
+      items: this.meetings
     });
 
   }
 
-  private createTimeline(role: string, meetingsFB?: any[]) {
+  private createTimeline(role: string, hoteliers: any[], meetingsFB?: any[]) {
     const container = document.getElementById('visualization');
 
-    const groups = this.createGroups(role, meetingsFB);
-    // console.log('groups: ', groups.getIds());
+    // this.groups = this.createGroups(role, meetingsFB);
+    this.groups = this.createGroups(role, hoteliers);
+    // if (this.groups) {
+    //   console.log('groups: ', this.groups.getIds());
+    // }
 
-    const meetings = this.createMeetings(role, meetingsFB);
-    // console.log('meetings: ', meetings);
+    this.meetings = this.createMeetings(role, meetingsFB);
+    // console.log('meetings: ', this.meetings.getIds());
 
-    const options = this.createTimelineOptions(role, meetingsFB);
+    const options = this.createOptions(role, meetingsFB);
 
-    const timeline = new Vis.Timeline(container, meetings, groups, options);
+    const timeline = new Vis.Timeline(container, this.meetings, this.groups, options);
 
+    // timeline.on('contextmenu', props => {
+    //   // if interim state, show menu to accept/reject
+
+    //   // console.log('Right click!');
+    //   // console.log(props);
+    //   // this.onRemoveMeeting(this.meetings.get(props.item));
+
+    //   // console.log(this.meetings.get(props.item).state);
+    //   props.event.preventDefault();
+    // });
     return timeline;
   }
 

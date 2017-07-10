@@ -64,7 +64,6 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
   onCheckDeal(dealEvent) {
     this.dealt = dealEvent.checked;
-    console.log(this.dealt);
   }
 
   ngOnInit() {
@@ -143,8 +142,11 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
         if (myVote !== undefined && otherVote !== undefined) {
           const meetingDeal = myVote && otherVote ? true : false;
-          this.updateMeetingDealValue(meetingDeal);
-          this.updateMeetingCompletedValue(true);
+          // this.updateMeetingDealValue(meetingDeal);
+          this.dbApi.updateMeetingDeal(this.MEETING_ID, meetingDeal);
+
+          this.dbApi.updateMeetingState(this.MEETING_ID, 'completed')
+          // this.updateMeetingCompletedValue(true);
         }
       });
     }
@@ -153,15 +155,15 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     this.dialog.closeAll();
   }
 
-  private updateMeetingCompletedValue(completed) {
-    const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
-    pendingMeeting.update({ completed: completed });
-  }
+  // private updateMeetingCompletedValue(completed) {
+  //   const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
+  //   pendingMeeting.update({ completed: completed });
+  // }
 
-  private updateMeetingDealValue(deal: boolean) {
-    const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
-    pendingMeeting.update({ deal: deal });
-  }
+  // private updateMeetingDealValue(deal: boolean) {
+  //   const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
+  //   pendingMeeting.update({ deal: deal });
+  // }
 
   deal() {
     this.dealt = true;

@@ -39,11 +39,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.dbApi.getHoteliersCount().takeUntil(this.ngUnsubscribe)
-      .subscribe(count => this.numOfHoteliers = count);
+    this.dbApi.getHoteliers().takeUntil(this.ngUnsubscribe)
+      .subscribe(hoteliers => this.numOfHoteliers = hoteliers.length);
 
-    this.dbApi.getProducersCount().takeUntil(this.ngUnsubscribe)
-      .subscribe(count => this.numOfProducers = count);
+    this.dbApi.getProducers().takeUntil(this.ngUnsubscribe)
+      .subscribe(producers => this.numOfProducers = producers.length);
   }
 
   ngOnDestroy(): void {

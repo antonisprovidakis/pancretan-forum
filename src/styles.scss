@@ -53,10 +53,17 @@ md-icon{
     border-width: 3px;
   }
 
-    &.occupiedPending {
+  &.occupiedPending {
     color: white;
     background-color: #605959;
     border-color: #e8ad0d;
+    border-width: 3px;
+  }
+
+  &.occupiedInterim {
+    color: white;
+    background-color: #605959;
+    border-color: #176aef;
     border-width: 3px;
   }
 
@@ -66,9 +73,15 @@ md-icon{
     border-width: 3px;
   }
 
-    &.pending {
+  &.pending {
     color: white;
     border-color: #e8ad0d;
+    border-width: 3px;
+  }
+
+   &.interim {
+    color: white;
+    border-color: #176aef;
     border-width: 3px;
   }
 

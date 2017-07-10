@@ -61,12 +61,7 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
           if (role) {
             this.role = role;
 
-            this.db.list(MEETINGS_PATH, {
-              query: {
-                orderByChild: 'completed',
-                equalTo: false
-              }
-            }).takeUntil(this.ngUnsubscribe).subscribe((meetings: any[]) => {
+            this.dbApi.getCompletedMeetings().takeUntil(this.ngUnsubscribe).subscribe((meetings: any[]) => {
               const meetingsToDisplay = [];
               const now = Date.now();
 
@@ -93,9 +88,6 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.dialog.afterAllClosed.subscribe(() => {
-      // TODO: transfer exited chatroom, from pending to completed
-    });
   }
 
   ngOnDestroy(): void {
