@@ -52,7 +52,7 @@ md-icon{
   &.occupiedPending {
     color: white;
     background-color: #605959;
-    border-color: #e8ad0d;
+    border-color: #a64a2b;
     border-width: 3px;
   }
 
@@ -71,7 +71,7 @@ md-icon{
 
   &.pending {
     color: white;
-    border-color: #e8ad0d;
+    border-color: #a64a2b;
     border-width: 3px;
   }
 
@@ -84,10 +84,6 @@ md-icon{
 
 /* Context menu style for scheduler */
 .ngx-contextmenu .dropdown-menu {
-  // border: 1px solid rgba(0,0,0,.15);
-  // background-color: #ffffff;
-  // padding: 5px 0;
-  // left;
   z-index: 1000;
   float: left;
   min-width: 160px;

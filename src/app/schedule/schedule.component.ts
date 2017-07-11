@@ -48,6 +48,11 @@ export class ScheduleComponent implements OnInit, OnDestroy {
   ) { }
 
   private createContextMenuItems(role: string) {
+
+    if (role === 'chamber') {
+      return [];
+    }
+
     let menuItems = null;
 
     if (role === 'hotelier') {
@@ -100,6 +105,10 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
   shouldHideMenu(role, clickedMeeting) {
     if (role && clickedMeeting) {
+
+      if (role === 'chamber') {
+        return true;
+      }
 
       if (clickedMeeting.state === 'completed') {
         return true;
@@ -242,7 +251,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         label = label + '<br><span>State: <span style="background-color: #13d834;">Completed</span></span>';
       } else if (meeting.state === 'pending') {
         meetingObj['className'] = 'pending'
-        label = label + '<br><span>State: <span style="background-color: #e8ad0d;">Pending</span></span>';
+        label = label + '<br><span>State: <span style="background-color: #a64a2b;">Pending</span></span>';
       } else {
         meetingObj['className'] = 'interim'
         label = label + '<br><span>State: <span style="background-color: #176aef;">Proposed</span></span>';
