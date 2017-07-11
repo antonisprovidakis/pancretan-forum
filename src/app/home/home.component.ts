@@ -65,13 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   filterProducersBasedOnInterests(interests) {
     const producersBasedOnInterests: any[] = [];
 
-    // console.log('userInterests: ', this.userInterests);
-
-
     if (!this.userInterests) {
-      // console.log('Early exit -- producersBasedOnInterests: ', producersBasedOnInterests);
       this.producersBasedOnInterests = producersBasedOnInterests;
-      // return producersBasedOnInterests;
     }
 
     this.dbApi.getProducers().take(1).subscribe(producers => {
@@ -88,11 +83,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
 
-      console.log('producersBasedOnInterests: ', producersBasedOnInterests);
       this.producersBasedOnInterests = producersBasedOnInterests;
-
     });
-
-    // return producersBasedOnInterests;
   }
 }

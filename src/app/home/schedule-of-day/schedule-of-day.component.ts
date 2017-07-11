@@ -1,10 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MdDialog } from '@angular/material';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
-import { AngularFireAuth } from 'angularfire2/auth';
-import * as firebase from 'firebase';
-
 import { Subject } from 'rxjs/Subject';
 
 import { AuthenticationService } from '../../shared/authentication.service';
@@ -47,9 +43,7 @@ export class ScheduleOfDayComponent implements OnInit, OnDestroy {
 
   constructor(
     public authService: AuthenticationService,
-    public db: AngularFireDatabase,
     private dbApi: DatabaseApiService,
-    public afAuth: AngularFireAuth,
     public dialog: MdDialog
   ) { }
 

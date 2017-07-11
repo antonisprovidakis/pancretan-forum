@@ -122,7 +122,7 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     return role === 'hotelier' ? this.hotelierRef : this.producerRef;
   }
 
-  private getOppositeRoleObject(role: string) {
+  getOppositeRoleObject(role: string) {
     return role === 'hotelier' ? this.producer : this.hotelier;
   }
 

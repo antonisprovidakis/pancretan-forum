@@ -40,9 +40,9 @@ const routes: Routes = [
   { path: 'forum', component: ForumStatusComponent },
   { path: 'schedule', component: ScheduleComponent },
   { path: 'partners', component: PartnersComponent },
-  // { path: 'contact', component: ContactComponent },
-  { path: 'contact', component: ExhibitionTableComponent },
+  { path: 'contact', component: ContactComponent },
   { path: 'negTable', component: NegotiationsTableComponent },
+  { path: 'exhibition-table/:id', component: ExhibitionTableComponent },
   { path: '**', redirectTo: '/login' }
 ];
 

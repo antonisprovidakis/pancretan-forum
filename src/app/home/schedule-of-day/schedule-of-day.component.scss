@@ -1,7 +1,10 @@
-.today-schedule-title {
+#today-schedule-title {
+  text-decoration: underline;
   text-align: center;
-  font-size: 20px;
+  // font-size: 20px;
+  margin-top: 0;
 }
+
 
 .time {
   font-size: 13px;

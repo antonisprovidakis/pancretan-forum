@@ -1,7 +1,7 @@
-<div fxLayout="row" fxLayoutGap="16px">
-  <!--<div id="container" fxLayout="row" fxLayoutGap="16px">-->
+<div fxLayout="column" fxLayoutAlign="center center">
+  <div id="container" fxLayout="row" fxLayoutGap="16px">
 
-    <div id="interestsContainer" fxLayout="column" fxFlex="128px">
+    <div id="interestsContainer" fxFlex="128px">
       <app-interests class="sticky" (interestsChange)="filterProducersBasedOnInterests($event)" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
     </div>
     <app-exhibition-table-cards fxFlex [producers]="producersBasedOnInterests"></app-exhibition-table-cards>
@@ -9,5 +9,5 @@
       <app-schedule-of-day class="sticky"></app-schedule-of-day>
     </div>
 
-  <!--</div>-->
+  </div>
 </div>

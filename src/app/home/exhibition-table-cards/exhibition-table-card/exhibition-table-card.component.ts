@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exhibition-table-card',
@@ -6,16 +7,18 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./exhibition-table-card.component.scss']
 })
 export class ExhibitionTableCardComponent implements OnInit {
+  @Input() uid: string;
   @Input() popularity = 0;
   @Input() logo: string;
   @Input() producerName: string;
   @Input() descr: string;
-  constructor() { }
+
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
   seeProducts() {
-    // TODO: navigate to table, according to uid (check firebase)
+    this.router.navigate(['/exhibition-table', this.uid]);
   }
 }

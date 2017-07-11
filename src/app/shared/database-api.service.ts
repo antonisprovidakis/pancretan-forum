@@ -76,6 +76,23 @@ export class DatabaseApiService {
     });
   }
 
+  getProducerCompany(uid: string): Observable<any> {
+    return new Observable(observer => {
+      this.getProducers().take(1).subscribe(producers => {
+
+        producers.forEach(producer => {
+          if (producer.$key === uid) {
+            observer.next(producer.company);
+            observer.complete();
+          }
+        });
+
+        observer.next(null);
+        observer.complete();
+      });
+    });
+  }
+
   getUserRole(): Observable<string> {
     return new Observable(observer => {
       if (this.authService.isAuthenticated()) { // TODO: maybe remove
@@ -116,11 +133,11 @@ export class DatabaseApiService {
   }
 
   updateMeetingState(meetingId: string, newState: 'pending' | 'completed' | 'interim') {
-    this.db.object('/meetings/' + meetingId).update({state: newState});
+    this.db.object('/meetings/' + meetingId).update({ state: newState });
   }
 
   updateMeetingDeal(meetingId: string, deal: boolean) {
-    this.db.object('/meetings/' + meetingId).update({deal: deal});
+    this.db.object('/meetings/' + meetingId).update({ deal: deal });
   }
 
   createMeeting(meetingId: string, meetingData: any) {
