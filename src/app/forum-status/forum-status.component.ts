@@ -18,10 +18,10 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public doughnutChartLabels: string[] = ['Deals', 'No Deals'];
-  private deals: number = 0;
-  private noDeals: number = 0;
+  private deals = 0;
+  private noDeals = 0;
   public doughnutChartData: number[] = [1, 1];
-  public doughnutChartType: string = 'doughnut';
+  public doughnutChartType = 'doughnut';
 
   public data: Array<any> = [
     { text: '', weight: 3 },
@@ -48,7 +48,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
     this.dbApi.getCompletedMeetings()
       .takeUntil(this.ngUnsubscribe).subscribe(meetings => {
 
-        for (let meeting of meetings) {
+        for (const meeting of meetings) {
 
           this.setupEmergentThemesData(meeting.emergent_themes);
           this.setupCommonInterestsData(meeting.common_interests);
@@ -71,6 +71,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
     ).subscribe(data => {
       const hoteliers = data[0];
       const producers = data[1];
+
       const hoteliersNodes = [];
       const producersNodes = [];
 
@@ -91,13 +92,14 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
           label: producer.company.name
         });
       });
+
       this.nodes = this.nodes.concat(producersNodes);
       this.nodes = this.nodes.concat(hoteliersNodes);
 
       this.edges = this.edges.concat(
         this.setupEdges(producersNodes, hoteliersNodes));
 
-      const container = document.getElementById('usersContainer');
+      const container = document.getElementById('communityNetwork');
 
       const netData = {
         nodes: this.nodes,
@@ -106,7 +108,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
 
       const options = {
         autoResize: true,
-        // height: '100%',
+        height: '300px',
         // width: '100%',
         nodes: {
           borderWidth: 2,
@@ -120,11 +122,11 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
         edges: {
           color: 'lightgray',
           length: 150,
-          width: 2
+          width: 3
         }
       };
 
-      let network = new Vis.Network(container, netData, options);
+      const communityNetwork = new Vis.Network(container, netData, options);
     });
 
   }
@@ -136,9 +138,10 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
 
   private setupCommonInterestsData(commonInterests) {
 
-    for (let interest of commonInterests) {
-      //check if the current interest is already in the list
-      let index = this.commonInterestsList.findIndex(value => value.text === interest);
+    for (const interest of commonInterests) {
+      // check if the current interest is already in the list
+      const index = this.commonInterestsList.findIndex(value => value.text === interest);
+
       if (index > -1) {
         this.commonInterestsList[index].weight += 5;
       } else {
@@ -152,9 +155,10 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
 
   private setupEmergentThemesData(emergentThemes) {
 
-    for (let emergentThema of emergentThemes) {
-      //check if the current emergentThema is already in the list
-      let index = this.emergentThemesList.findIndex(value => value.text === emergentThema);
+    for (const emergentThema of emergentThemes) {
+
+      // check if the current emergentThema is already in the list
+      const index = this.emergentThemesList.findIndex(value => value.text === emergentThema);
 
       if (index > -1) {
         this.emergentThemesList[index].weight += 5;
@@ -169,15 +173,15 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
   }
 
   private setupEdges(producers, hoteliers): any[] {
-    let edges = [];
+    const edges = [];
 
-    for (let producer of producers) {
+    for (const producer of producers) {
       edges.push({
         from: 3, to: producer.id
       });
     }
 
-    for (let hotelier of hoteliers) {
+    for (const hotelier of hoteliers) {
       edges.push({
         from: 2, to: hotelier.id
       });

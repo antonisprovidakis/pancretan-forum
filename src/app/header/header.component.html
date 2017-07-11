@@ -5,7 +5,7 @@
       PanCretan Forum
     </span>
     <a md-button routerLink="/home" *ngIf="authService.isAuthenticated() && role">HOME</a>
-    <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role==='chamber'">FORUM STATUS</a>
+    <a md-button routerLink="/forum" *ngIf="authService.isAuthenticated() && role==='chamber'">FORUM OVERVIEW</a>
     <a md-button routerLink="/schedule" *ngIf="authService.isAuthenticated() && role">SCHEDULE</a>
     <a md-button routerLink="/people" *ngIf="authService.isAuthenticated() && role">PEOPLE</a>
     <a md-button routerLink="/contact" *ngIf="authService.isAuthenticated() && role">CONTACT</a>

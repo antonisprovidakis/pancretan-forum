@@ -1,33 +1,35 @@
 <div fxLayout="column" fxLayoutAlign="center center">
-
   <div id="container" fxLayout="column" fxLayoutGap="16px">
     <h1 fxFlexAlign="center">Forum Overview</h1>
 
     <md-card>
       <md-card-title>Popular Themes</md-card-title>
       <md-card-content>
-        <angular-tag-cloud [data]="data" [height]="400" [width]="900"></angular-tag-cloud>
+        <angular-tag-cloud [data]="data" [height]="300" [width]="1"></angular-tag-cloud>
       </md-card-content>
     </md-card>
 
-    <div fxLayout="row" fxLayoutGap="15px">
+    <div fxLayout="row" fxLayoutGap="16px">
 
-      <md-card>
-        <md-card-title>Deals</md-card-title>
-        <md-card-content>
-          <div class="doughnut-chart">
-            <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType">
-          </canvas>
-          </div>
-        </md-card-content>
-      </md-card>
+      <div fxLayout="column" fxLayoutGap="16px">
+        <md-card>
+          <md-card-title>Deals</md-card-title>
+          <md-card-content>
+            <div class="doughnut-chart">
+              <canvas baseChart [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType"></canvas>
+            </div>
+          </md-card-content>
+        </md-card>
+      </div>
 
-      <md-card>
-        <md-card-title>Community</md-card-title>
-        <md-card-content>
-          <div id="usersContainer"></div>
-        </md-card-content>
-      </md-card>
+      <div fxLayout="column" fxFlex fxLayoutGap="16px">
+        <md-card>
+          <md-card-title>Community</md-card-title>
+          <md-card-content>
+            <div id="communityNetwork"></div>
+          </md-card-content>
+        </md-card>
+      </div>
 
     </div>
   </div>
