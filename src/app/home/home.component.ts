@@ -20,6 +20,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   allInterests: string[];
   userInterests: string[];
 
+  role: string;
+
   constructor(
     private authService: AuthenticationService,
     private dbApi: DatabaseApiService
@@ -30,6 +32,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (user) {
         this.dbApi.getUserRole().take(1).subscribe(
           role => {
+            this.role = role;
+
             this.dbApi.getCurrentUserInterests(this.authService.getUID(), role)
               .takeUntil(this.ngUnsubscribe).subscribe(userInterests => {
                 this.userInterests = userInterests;

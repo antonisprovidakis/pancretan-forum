@@ -9,17 +9,17 @@
     </div>
     <md-card>
       <md-card-content>
-        <form fxLayout="column">
+        <form fxLayout="column" [formGroup]="signinForm">
           <md-input-container>
-            <input mdInput placeholder="Email" />
+            <input mdInput placeholder="Email" formControlName="email"/>
           </md-input-container>
           <md-input-container>
-            <input mdInput placeholder="Password" />
+            <input type="password" mdInput placeholder="Password" formControlName="password"/>
           </md-input-container>
         </form>
       </md-card-content>
       <md-card-actions>
-        <button md-raised-button fxFlex color="accent">SIGN IN</button>
+        <button md-raised-button fxFlex color="accent" (click)="signin()">SIGN IN</button>
       </md-card-actions>
     </md-card>
     <!--<span fxFlexAlign="center">or</span>-->

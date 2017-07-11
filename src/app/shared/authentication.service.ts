@@ -55,6 +55,10 @@ export class AuthenticationService {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
   }
 
+  signinWithEmail(email: string, password: string) {
+    return this.afAuth.auth.signInWithEmailAndPassword(email, password);
+  }
+
   signout() {
     return this.afAuth.auth.signOut();
   }

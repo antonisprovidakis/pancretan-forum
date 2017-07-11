@@ -15,7 +15,6 @@ exports.createProfile = functions.auth.user().onCreate( event => {
 });
 
 exports.deleteProfile = functions.auth.user().onDelete( event => {
-  // TODO: also delete hotelier/producer/chamber data (from respective array)
 	return admin.database().ref(`/users/${event.data.uid}`).remove();
 });
 

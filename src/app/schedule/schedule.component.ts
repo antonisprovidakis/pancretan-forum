@@ -17,10 +17,7 @@ import { DatabaseApiService } from '../shared/database-api.service';
 
 import * as Vis from 'vis';
 
-// const MEETINGS_PATH = '/meetings';
-
 const MINUTE_10 = 600000;
-
 
 @Component({
   selector: 'app-schedule',

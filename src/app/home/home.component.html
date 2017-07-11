@@ -3,7 +3,7 @@
     <app-interests class="sticky" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
   </div>
   <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3', 'uid3']"></app-exhibition-table-cards>
-  <div fxFlex="160px">
+  <div *ngIf="role && role!=='chamber'" fxFlex="160px">
     <app-schedule-of-day class="sticky"></app-schedule-of-day>
   </div>
 </div>
