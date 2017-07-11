@@ -46,7 +46,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
-import { PeopleComponent } from './people/people.component';
+import { PartnersComponent } from './partners/partners.component';
 import { NegotiationsTableComponent } from './negotiations-table/negotiations-table.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { HeaderComponent } from './header/header.component';
@@ -77,7 +77,7 @@ import { ForumStatusComponent } from './forum-status/forum-status.component';
     AppComponent,
     LoginComponent,
     RegistrationComponent,
-    PeopleComponent,
+    PartnersComponent,
     NegotiationsTableComponent,
     ScheduleComponent,
     HeaderComponent,
