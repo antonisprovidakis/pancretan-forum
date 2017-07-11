@@ -37,9 +37,9 @@
         fxLayoutGap="8px">
         <span fxFlexAlign="center">Online Users:</span>
         <!--<div class="user-pic" [ngStyle]="{'background-image': 'url(' + user.photo + ')'}"  mdTooltip="{{'user.name'}} is Online" mdTooltipPosition="below" *ngFor="let user of []"></div>-->
-        <div *ngIf="hotelier.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + hotelier.photoURL + ')'}" mdTooltip="{{hotelier.company}} is Online"
+        <div *ngIf="hotelier.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + hotelier.logo + ')'}" mdTooltip="{{hotelier.company_name}} is Online"
           mdTooltipPosition="below"></div>
-        <div *ngIf="producer.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + producer.photoURL + ')'}" mdTooltip="{{producer.company}} is Online"
+        <div *ngIf="producer.online" class="user-pic" [ngStyle]="{'background-image': 'url(' + producer.logo + ')'}" mdTooltip="{{producer.company_name}} is Online"
           mdTooltipPosition="below"></div>
       </div>
     </div>
@@ -53,7 +53,7 @@
             <div id="messagesContainer">
               <div class="messageContainer" fxLayout="row" fxLayoutGap="8px" *ngFor="let message of messages | async">
                 <div>
-                  <div class="pic" [style.background-image]="'url(' + message.photoUrl + ')'"></div>
+                  <div class="pic" [style.background-image]="'url(' + message.logo + ')'"></div>
                 </div>
                 <div fxLayout="column" fxLayoutGap="8px">
                   <div class="message">
@@ -84,7 +84,5 @@
   </div>
   <div id="dealContainer" fxLayout="column" fxLayoutAlign.gt-xs="end" fxLayoutGap="8px" fxFlexOrder.xs="3">
     <md-checkbox indeterminate="true" (change)="onCheckDeal($event)">Deal?</md-checkbox>
-    <!--<button md-raised-button id="noDealButton" color="warn" (click)="noDeal()">NO DEAL</button>
-    <button md-raised-button id="dealButton" (click)="deal()">DEAL</button>-->
   </div>
 </div>

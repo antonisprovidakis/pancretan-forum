@@ -79,8 +79,8 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
         hoteliersNodes.push({
           id: hotelier.$key,
           shape: 'circularImage',
-          image: hotelier.repr_hotel.logo,
-          label: hotelier.repr_hotel.name
+          image: hotelier.company.logo,
+          label: hotelier.company.name
         });
       });
 

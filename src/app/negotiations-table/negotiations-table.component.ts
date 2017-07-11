@@ -76,6 +76,7 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
         });
 
         this.producerRef = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID + '/' + 'producer');
+
         this.producerRef.subscribe(producer => {
           this.producer = producer;
         });
@@ -142,11 +143,9 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
         if (myVote !== undefined && otherVote !== undefined) {
           const meetingDeal = myVote && otherVote ? true : false;
-          // this.updateMeetingDealValue(meetingDeal);
           this.dbApi.updateMeetingDeal(this.MEETING_ID, meetingDeal);
 
           this.dbApi.updateMeetingState(this.MEETING_ID, 'completed')
-          // this.updateMeetingCompletedValue(true);
         }
       });
     }
@@ -154,16 +153,6 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
     this.goOffline()
     this.dialog.closeAll();
   }
-
-  // private updateMeetingCompletedValue(completed) {
-  //   const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
-  //   pendingMeeting.update({ completed: completed });
-  // }
-
-  // private updateMeetingDealValue(deal: boolean) {
-  //   const pendingMeeting = this.db.object(MEETINGS_PATH + '/' + this.MEETING_ID);
-  //   pendingMeeting.update({ deal: deal });
-  // }
 
   deal() {
     this.dealt = true;
@@ -216,19 +205,27 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
   saveMessage() {
     if (this.messageValue && this.authService.isAuthenticated()) {
-      // Add a new message entry to the Firebase Database.
-      this.messages.push({
-        name: this.authService.getDisplayName(),
-        text: this.messageValue,
-        photoUrl: this.authService.getPhotoURL()
-      }).then(() => {
-        this.messageValue = '';
-      }).catch((err) => {
-        this.snackBar.open('Error writing new message to Firebase Database.', null, {
-          duration: 5000
+
+      this.myRoleRef.take(1).subscribe(user => {
+        const companyName = user.company_name;
+        const companyLogo = user.logo
+
+        // Add a new message entry to the Firebase Database.
+        this.messages.push({
+          name: companyName,
+          text: this.messageValue,
+          logo: companyLogo
+        }).then(() => {
+          this.messageValue = '';
+        }).catch((err) => {
+          this.snackBar.open('Error writing new message to Firebase Database.', null, {
+            duration: 5000
+          });
+          console.error(err);
         });
-        console.error(err);
+
       });
+
     }
   }
 
@@ -248,33 +245,39 @@ export class NegotiationsTableComponent implements OnInit, OnDestroy {
 
     if (this.authService.isAuthenticated()) {
 
-      // We add a message with a loading icon that will get updated with the shared image.
-      this.messages.push({
-        name: this.authService.getDisplayName(),
-        imageUrl: LOADING_IMAGE_URL,
-        photoUrl: this.authService.getPhotoURL()
-      }).then((data) => {
-        // Upload the image to Cloud Storage.
-        const filePath = `meetings/${this.MEETING_ID}/${this.authService.getUID()}/${data.key}/${file.name}`;
-        return firebase.storage().ref(filePath).put(file)
-          .then((snapshot) => {
-            // Get the file's Storage URI and update the chat message placeholder.
-            const fullPath = snapshot.metadata.fullPath;
-            const imageUrl = firebase.storage().ref(fullPath).toString();
-            return firebase.storage().refFromURL(imageUrl).getMetadata();
-          }).then((metadata) => {
-            // TODO: Instead of saving the download URL, save the GCS URI and
-            //       dynamically load the download URL when displaying the image
-            //       message.
-            return data.update({
-              imageUrl: metadata.downloadURLs[0]
+      this.myRoleRef.take(1).subscribe(user => {
+        const companyName = user.company_name;
+        const companyLogo = user.logo
+
+        // We add a message with a loading icon that will get updated with the shared image.
+        this.messages.push({
+          name: companyName,
+          imageUrl: LOADING_IMAGE_URL,
+          logo: companyLogo
+        }).then((data) => {
+          // Upload the image to Cloud Storage.
+          const filePath = `meetings/${this.MEETING_ID}/${this.authService.getUID()}/${data.key}/${file.name}`;
+          return firebase.storage().ref(filePath).put(file)
+            .then((snapshot) => {
+              // Get the file's Storage URI and update the chat message placeholder.
+              const fullPath = snapshot.metadata.fullPath;
+              const imageUrl = firebase.storage().ref(fullPath).toString();
+              return firebase.storage().refFromURL(imageUrl).getMetadata();
+            }).then((metadata) => {
+              // TODO: Instead of saving the download URL, save the GCS URI and
+              //       dynamically load the download URL when displaying the image
+              //       message.
+              return data.update({
+                imageUrl: metadata.downloadURLs[0]
+              });
             });
+        }).catch((err) => {
+          this.snackBar.open('There was an error uploading a file to Cloud Storage.', null, {
+            duration: 5000
           });
-      }).catch((err) => {
-        this.snackBar.open('There was an error uploading a file to Cloud Storage.', null, {
-          duration: 5000
+          console.error(err);
         });
-        console.error(err);
+
       });
     }
   }

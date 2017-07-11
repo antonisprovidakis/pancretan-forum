@@ -95,12 +95,12 @@ export class RegistrationComponent implements OnInit, OnDestroy {
   }
 
   private createHotelierProfile(data: RegistrationDetails) {
-    const repr_hotel = {
+    const company = {
       name: data.company
     };
     const interests = data.interests;
 
-    this.dbApi.createHotelierProfile(repr_hotel, interests);
+    this.dbApi.createHotelierProfile(company, interests);
     console.log('save HotelierProfile');
   }
 

@@ -201,7 +201,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
       if (!this.duplicateInHoteliersIdAndName(hoteliersIdAndName, hotelier)) {
         const h = {
           uid: hotelier.$key,
-          name: hotelier.repr_hotel.name
+          name: hotelier.company.name
         };
 
         hoteliersIdAndName.push(h);
@@ -379,8 +379,8 @@ export class ScheduleComponent implements OnInit, OnDestroy {
         const timestamp = newMeeting.start.getTime();
 
         const h = {
-          company_name: hotelier.repr_hotel.name,
-          logo: hotelier.repr_hotel.logo,
+          company_name: hotelier.company.name,
+          logo: hotelier.company.logo,
           name: hotelier.name,
           online: false,
           photoURL: hotelier.photoURL,

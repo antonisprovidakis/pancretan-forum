@@ -101,15 +101,15 @@ export class DatabaseApiService {
     return this.db.object('/users/' + uid).update({ role: role });
   }
 
-  createHotelierProfile(repr_hotel: any, interests: string[]) {
-    return this.db.object('/users/' + this.authService.getUID()).set({
-      repr_hotel: repr_hotel,
+  createHotelierProfile(company: any, interests: string[]) {
+    return this.db.object('/users/' + this.authService.getUID()).update({
+      company: company,
       interests: interests
     });
   }
 
   createProducerProfile(company: any, interests: string[]) {
-    return this.db.object('/users/' + this.authService.getUID()).set({
+    return this.db.object('/users/' + this.authService.getUID()).update({
       company: company,
       interests: interests
     });
