@@ -1,19 +1,42 @@
-<p>partners works</p>
+<div fxLayout="column" fxLayoutAlign="center center">
+  <div id="container" fxLayout="column" fxLayoutGap="16px">
+    <h1 fxFlexAlign="center">Hotels</h1>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
+      <md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let hotel of hotels | async">
+        <md-card-title>{{hotel.company.name}}</md-card-title>
+        <img md-card-image src="{{hotel.company.logo}}">
+        <md-card-content>
+          <p>
+            <span class="bold-text">Representative:</span>
+            <span>{{hotel.name}}</span>
+          </p>
+          <div>
+            <span class="bold-text">Interests:</span>
+            <span *ngFor="let interest of hotel.interests"> {{interest | capital}} </span>
+          </div>
+        </md-card-content>
+      </md-card>
+    </div>
 
-<!--<div class="ui container">
-  <h1 id="title" class="ui center aligned header">People</h1>
-
-  <sui-select [(ngModel)]="selectedRole" placeholder="Users" class="fluid">
-    <sui-select-option value="Hoteliers"></sui-select-option>
-    <sui-select-option value="Producers"></sui-select-option>
-  </sui-select>
-  <div class="ui relaxed divided list">
-    <div class="item" *ngFor="let entry of peopleData">
-      <i class="large github middle aligned icon"></i>
-      <div class="content">
-        <a class="header">{{entry.brandName}}</a>
-        <sui-rating class="star" [ngModel]="entry.stars" [maximum]="5" isReadonly="true"></sui-rating>
-      </div>
+    <h1 fxFlexAlign="center">Producers</h1>
+    <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
+      <md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let producer of producers | async">
+        <md-card-title>{{producer.company.name}}</md-card-title>
+        <img md-card-image src="{{producer.company.logo}}">
+        <md-card-content>
+          <p>
+            <span class="bold-text">Representative:</span>
+            <span>{{producer.name}}</span>
+          </p>
+          <p>
+            <span class="bold-text">Description:</span> <span>{{producer.company.descr}}</span>
+          </p>
+          <div>
+            <span class="bold-text">Interests:</span>
+            <span *ngFor="let interest of producer.interests"> {{interest | capital}} </span>
+          </div>
+        </md-card-content>
+      </md-card>
     </div>
   </div>
-</div>-->
+</div>

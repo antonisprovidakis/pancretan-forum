@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import {  FirebaseListObservable } from 'angularfire2/database';
+
+import { DatabaseApiService } from '../shared/database-api.service';
+
 declare var $: any;
 
 @Component({
@@ -9,22 +13,16 @@ declare var $: any;
 })
 export class PartnersComponent implements OnInit {
 
-  selectedRole = 'hotelier';
-
-  peopleData = [
-    {
-      brandName: 'Garganourakis Farm',
-      stars: 5
-    },
-    {
-      brandName: 'Maridakis Butchery Shop',
-      stars: 3
-    }
-  ];
-
-  constructor() { }
+  hotels:FirebaseListObservable<any>;
+  producers: FirebaseListObservable<any>;
+  constructor(private dbApi: DatabaseApiService) { }
 
   ngOnInit() {
+
+
+    this.hotels = this.dbApi.getHoteliers();
+
+  this.producers = this.dbApi.getProducers();
   }
 
 }
