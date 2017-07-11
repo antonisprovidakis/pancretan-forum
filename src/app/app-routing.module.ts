@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './login/login.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { HomeComponent } from './home/home.component';
+import { ExhibitionTableComponent } from './home/exhibition-table-cards/exhibition-table/exhibition-table.component';
 import { ForumStatusComponent } from './forum-status/forum-status.component';
 import { ScheduleComponent } from './schedule/schedule.component';
 import { NegotiationsTableComponent } from './negotiations-table/negotiations-table.component';
@@ -39,7 +40,8 @@ const routes: Routes = [
   { path: 'forum', component: ForumStatusComponent },
   { path: 'schedule', component: ScheduleComponent },
   { path: 'partners', component: PartnersComponent },
-  { path: 'contact', component: ContactComponent },
+  // { path: 'contact', component: ContactComponent },
+  { path: 'contact', component: ExhibitionTableComponent },
   { path: 'negTable', component: NegotiationsTableComponent },
   { path: '**', redirectTo: '/login' }
 ];

@@ -9,8 +9,8 @@ import {MdSelectChange} from '@angular/material';
 })
 export class InterestsComponent implements OnInit {
 
-  @Input() allInterests: string[] = ['potato', 'tomato', 'beaf', 'pork', 'cheese'];
-  @Input() interests: string[] = ['potato', 'tomato'];
+  @Input() allInterests: string[];
+  @Input() interests: string[];
   @Output() interestsChange = new EventEmitter<string[]>();
 
   constructor() { }

@@ -7,10 +7,10 @@ import { ExhibitionTableData } from './exhibition-table-card/exhibition-table-da
   templateUrl: './exhibition-table-cards.component.html',
   styleUrls: ['./exhibition-table-cards.component.scss']
 })
-export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
-  @Input() producerIDs: string[] = ['uid1', 'uid2'];
+export class ExhibitionTableCardsComponent implements OnInit {
+  @Input() producers: any[];
 
-  tables: ExhibitionTableData[] = [];
+  // tables: ExhibitionTableData[] = [];
 
   constructor() {
 
@@ -20,23 +20,24 @@ export class ExhibitionTableCardsComponent implements OnInit, OnChanges {
   }
 
   // runs whenever input properties change
-  ngOnChanges(changes: SimpleChanges): void {
-    const newProducerIDs = changes.producerIDs.currentValue;
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   const newProducers = changes.producers.currentValue;
 
-    newProducerIDs.forEach(producerUID => {
+  //   newProducers.forEach(producer => {
 
-      // TODO: for every producerUID fetch data, create a table object and push it into this.tables
+  //     const producerTable: any[] = producer.company;
 
-      this.tables.push(
-        {
-          producerName: 'Gargan farm',
-          descr: 'Some descra15dsa4d5',
-          logo: '/assets/images/garg-farm.png',
-          popularity: 6
-        }
-      );
-    });
+  //     // TODO: for every producer fetch data, create a table object and push it into this.tables
 
-  }
+  //     this.tables.push(
+  //       {
+  //         producerName: 'Gargan farm',
+  //         descr: 'Some descra15dsa4d5',
+  //         logo: '/assets/images/garg-farm.png',
+  //         popularity: 6
+  //       }
+  //     );
+  //   });
+  // }
 
 }

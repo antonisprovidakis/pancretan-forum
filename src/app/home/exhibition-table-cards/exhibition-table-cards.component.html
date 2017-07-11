@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
   <!--<app-exhibition-table-card fxFlex.xs fxFlex.gt-xs="0 0 calc(50% - 16px)" *ngFor="let table of tables"-->
-  <app-exhibition-table-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let table of tables"
-    [producerName]="table.producerName" [descr]="table.descr" [logo]="table.logo" [popularity]="table.popularity">
+  <app-exhibition-table-card fxFlex.lt-md="0 0 calc(100% - 16px)" fxFlex.md="0 0 calc(50% - 16px)" fxFlex.gt-md="0 0 calc(33.3% - 16px)" *ngFor="let producer of producers"
+    [producerName]="producer.company.name" [descr]="producer.company.descr" [logo]="producer.company.logo" [popularity]="producer.company.popularity">
   </app-exhibition-table-card>
 </div>

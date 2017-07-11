@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   role: string;
 
+  producersBasedOnInterests: any[] = [];
+
   constructor(
     private authService: AuthenticationService,
     private dbApi: DatabaseApiService
@@ -34,10 +36,16 @@ export class HomeComponent implements OnInit, OnDestroy {
           role => {
             this.role = role;
 
-            this.dbApi.getCurrentUserInterests(this.authService.getUID(), role)
-              .takeUntil(this.ngUnsubscribe).subscribe(userInterests => {
-                this.userInterests = userInterests;
-              });
+            if (role === 'chamber') {
+              this.dbApi.getAllInterests().subscribe(interests => this.userInterests = interests)
+            } else {
+              this.dbApi.getCurrentUserInterests(this.authService.getUID(), role)
+                .takeUntil(this.ngUnsubscribe).subscribe(userInterests => {
+                  this.userInterests = userInterests;
+                });
+            }
+
+            this.filterProducersBasedOnInterests(this.userInterests);
           });
       }
     });
@@ -52,5 +60,39 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+  }
+
+  filterProducersBasedOnInterests(interests) {
+    const producersBasedOnInterests: any[] = [];
+
+    // console.log('userInterests: ', this.userInterests);
+
+
+    if (!this.userInterests) {
+      // console.log('Early exit -- producersBasedOnInterests: ', producersBasedOnInterests);
+      this.producersBasedOnInterests = producersBasedOnInterests;
+      // return producersBasedOnInterests;
+    }
+
+    this.dbApi.getProducers().take(1).subscribe(producers => {
+
+      producers.forEach(producer => {
+        const producerInterests: string[] = producer.interests;
+
+        for (let i = 0; i < this.userInterests.length; i++) {
+
+          if (producerInterests.includes(this.userInterests[i])) {
+            producersBasedOnInterests.push(producer);
+            break;
+          }
+        }
+      });
+
+      console.log('producersBasedOnInterests: ', producersBasedOnInterests);
+      this.producersBasedOnInterests = producersBasedOnInterests;
+
+    });
+
+    // return producersBasedOnInterests;
   }
 }

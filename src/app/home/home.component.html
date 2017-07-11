@@ -1,9 +1,13 @@
 <div fxLayout="row" fxLayoutGap="16px">
-  <div id="interestsContainer" fxLayout="column" fxFlex="128px">
-    <app-interests class="sticky" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
-  </div>
-  <app-exhibition-table-cards fxFlex [producerIDs]="['uid1', 'uid2', 'uid3', 'uid3']"></app-exhibition-table-cards>
-  <div *ngIf="role && role!=='chamber'" fxFlex="160px">
-    <app-schedule-of-day class="sticky"></app-schedule-of-day>
-  </div>
+  <!--<div id="container" fxLayout="row" fxLayoutGap="16px">-->
+
+    <div id="interestsContainer" fxLayout="column" fxFlex="128px">
+      <app-interests class="sticky" (interestsChange)="filterProducersBasedOnInterests($event)" [(interests)]="userInterests" [allInterests]="allInterests"></app-interests>
+    </div>
+    <app-exhibition-table-cards fxFlex [producers]="producersBasedOnInterests"></app-exhibition-table-cards>
+    <div *ngIf="role && role!=='chamber'" fxFlex="160px">
+      <app-schedule-of-day class="sticky"></app-schedule-of-day>
+    </div>
+
+  <!--</div>-->
 </div>
