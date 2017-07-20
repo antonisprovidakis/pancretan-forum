@@ -3,39 +3,25 @@
     <h1 fxFlexAlign="center">Hotels</h1>
     <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
       <md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let hotel of hotels | async">
-        <md-card-title>{{hotel.company.name}}</md-card-title>
         <img md-card-image src="{{hotel.company.logo}}">
-        <md-card-content>
-          <p>
-            <span class="bold-text">Representative:</span>
-            <span>{{hotel.name}}</span>
-          </p>
-          <div>
-            <span class="bold-text">Interests:</span>
-            <span *ngFor="let interest of hotel.interests"> {{interest | capital}} </span>
-          </div>
+        <md-card-title>{{hotel.company.name}}</md-card-title>
+         <md-card-content>
         </md-card-content>
+        <md-card-actions>
+          <button md-button>VISIT</button>
+        </md-card-actions>
       </md-card>
     </div>
-
     <h1 fxFlexAlign="center">Producers</h1>
     <div fxLayout="row" fxLayout.xs="column" fxLayoutWrap fxLayoutGap="16px">
       <md-card fxFlex.xs fxFlex.sm="0 0 calc(50% - 16px)" fxFlex.gt-sm="0 0 calc(33.3% - 16px)" *ngFor="let producer of producers | async">
-        <md-card-title>{{producer.company.name}}</md-card-title>
         <img md-card-image src="{{producer.company.logo}}">
+        <md-card-title>{{producer.company.name}}</md-card-title>
         <md-card-content>
-          <p>
-            <span class="bold-text">Representative:</span>
-            <span>{{producer.name}}</span>
-          </p>
-          <p>
-            <span class="bold-text">Description:</span> <span>{{producer.company.descr}}</span>
-          </p>
-          <div>
-            <span class="bold-text">Interests:</span>
-            <span *ngFor="let interest of producer.interests"> {{interest | capital}} </span>
-          </div>
+          <p>{{producer.company.descr}}</p>
         </md-card-content>
+        <md-card-actions>
+        </md-card-actions>
       </md-card>
     </div>
   </div>
