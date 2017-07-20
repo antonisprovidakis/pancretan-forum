@@ -294,7 +294,7 @@ export class ScheduleComponent implements OnInit, OnDestroy {
 
     // schedule is open from 08:00 to 21:00
     const hiddenDateStart = new Date(minDate);
-    hiddenDateStart.setHours(21);
+    hiddenDateStart.setHours(23);
     hiddenDateStart.setMinutes(0);
 
     const hiddenDateEnd = new Date(maxDate);
