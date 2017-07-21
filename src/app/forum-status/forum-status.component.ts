@@ -23,13 +23,14 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
   public doughnutChartData: number[] = [1, 1];
   public doughnutChartType = 'doughnut';
 
-  public data: Array<any> = [
+  public popularThemesData: Array<any> = [
     { text: '', weight: 3 },
     // { text: 'meat', weight: 5 },
   ]
 
-  private commonInterestsList: any[] = [];
-  private emergentThemesList: any[] = [];
+  private tempList: any[] = [];
+  // private commonInterestsList: any[] = [];
+  // private emergentThemesList: any[] = [];
 
   private nodes: any[] = [
     { id: 1, shape: 'ellipse', label: 'PanCretan Forum' },
@@ -48,10 +49,20 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
     this.dbApi.getCompletedMeetings()
       .takeUntil(this.ngUnsubscribe).subscribe(meetings => {
 
+        let allTags: string[] = [];
+
         for (const meeting of meetings) {
 
-          this.setupEmergentThemesData(meeting.emergent_themes);
-          this.setupCommonInterestsData(meeting.common_interests);
+          if (meeting.emergent_themes) {
+            allTags = allTags.concat(meeting.emergent_themes);
+          }
+
+          if (meeting.common_interests) {
+            allTags = allTags.concat(meeting.common_interests);
+
+          }
+
+          this.setupPopularThemesData(allTags);
 
           if (meeting.deal) {
             this.deals++;
@@ -61,8 +72,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
         }
 
         this.doughnutChartData = [this.noDeals, this.deals];
-        this.data = this.data.concat(this.emergentThemesList);
-        this.data = this.data.concat(this.commonInterestsList);
+        this.popularThemesData = this.popularThemesData.concat(this.tempList);
       });
 
     Observable.forkJoin(
@@ -136,41 +146,58 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
     this.ngUnsubscribe.complete();
   }
 
-  private setupCommonInterestsData(commonInterests) {
+  private setupPopularThemesData(tags) {
 
-    for (const interest of commonInterests) {
-      // check if the current interest is already in the list
-      const index = this.commonInterestsList.findIndex(value => value.text === interest);
+    for (const tag of tags) {
+      // check if the current tag is already in the list
+      // const index = this.popularThemesData.findIndex(value => value.text === tag);
+      const index = this.tempList.findIndex(value => value.text === tag);
 
       if (index > -1) {
-        this.commonInterestsList[index].weight += 5;
+        this.tempList[index].weight += 5;
       } else {
-        this.commonInterestsList.push({
-          text: interest,
+        this.tempList.push({
+          text: tag,
           weight: 3
         });
       }
     }
   }
 
-  private setupEmergentThemesData(emergentThemes) {
+  // private setupCommonInterestsData(commonInterests) {
 
-    for (const emergentThema of emergentThemes) {
+  //   for (const interest of commonInterests) {
+  //     // check if the current interest is already in the list
+  //     const index = this.commonInterestsList.findIndex(value => value.text === interest);
 
-      // check if the current emergentThema is already in the list
-      const index = this.emergentThemesList.findIndex(value => value.text === emergentThema);
+  //     if (index > -1) {
+  //       this.commonInterestsList[index].weight += 5;
+  //     } else {
+  //       this.commonInterestsList.push({
+  //         text: interest,
+  //         weight: 3
+  //       });
+  //     }
+  //   }
+  // }
 
-      if (index > -1) {
-        this.emergentThemesList[index].weight += 5;
-      } else {
-        this.emergentThemesList.push({
-          text: emergentThema,
-          weight: 5
-        });
-      }
-    }
+  // private setupEmergentThemesData(emergentThemes) {
 
-  }
+  //   for (const emergentThema of emergentThemes) {
+
+  //     // check if the current emergentThema is already in the list
+  //     const index = this.emergentThemesList.findIndex(value => value.text === emergentThema);
+
+  //     if (index > -1) {
+  //       this.emergentThemesList[index].weight += 5;
+  //     } else {
+  //       this.emergentThemesList.push({
+  //         text: emergentThema,
+  //         weight: 5
+  //       });
+  //     }
+  //   }
+  // }
 
   private setupEdges(producers, hoteliers): any[] {
     const edges = [];
