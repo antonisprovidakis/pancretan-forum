@@ -26,11 +26,9 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
   public popularThemesData: Array<any> = [
     { text: '', weight: 3 },
     // { text: 'meat', weight: 5 },
-  ]
+  ];
 
   private tempList: any[] = [];
-  // private commonInterestsList: any[] = [];
-  // private emergentThemesList: any[] = [];
 
   private nodes: any[] = [
     { id: 1, shape: 'ellipse', label: 'PanCretan Forum' },
@@ -52,14 +50,14 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
         let allTags: string[] = [];
 
         for (const meeting of meetings) {
-
           if (meeting.emergent_themes) {
-            allTags = allTags.concat(meeting.emergent_themes);
+            const emergentThemesValues = Object.keys(meeting.emergent_themes).map(key => meeting.emergent_themes[key]);
+            allTags = allTags.concat(emergentThemesValues);
           }
 
           if (meeting.common_interests) {
-            allTags = allTags.concat(meeting.common_interests);
-
+            const commonInterestsValues = Object.keys(meeting.common_interests).map(key => meeting.common_interests[key]);
+            allTags = allTags.concat(commonInterestsValues);
           }
 
           this.setupPopularThemesData(allTags);
@@ -72,6 +70,10 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
         }
 
         this.doughnutChartData = [this.noDeals, this.deals];
+
+        this.popularThemesData = [
+          { text: '', weight: 3 },
+        ]
         this.popularThemesData = this.popularThemesData.concat(this.tempList);
       });
 
@@ -147,6 +149,7 @@ export class ForumStatusComponent implements OnInit, OnDestroy {
   }
 
   private setupPopularThemesData(tags) {
+    this.tempList = [];
 
     for (const tag of tags) {
       // check if the current tag is already in the list
