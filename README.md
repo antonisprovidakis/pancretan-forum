@@ -9,7 +9,7 @@
 
 Pancretan Forum is the final project for the course "Computer Supported Collaboration" in the context of my Master's Degree.
 
-An e-Collaboration prototype system has been developed driven by theories of CSCW and Virtual Work.
+An e-Collaboration prototype system developed driven by theories of CSCW and Virtual Work.
 
 For more info see [documentation](./documentation) folder.
 
