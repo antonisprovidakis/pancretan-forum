@@ -1,3 +1,10 @@
+ ## NOTICE ⚠ 
+ 
+**This repo has been archived due to library issues but kept public just for future reference.**
+
+**It does not run in it's current form.**
+
+
 ## About
 
 Pancretan Forum is the final project for the course "Computer Supported Collaboration" in the context of my Master's Degree.
